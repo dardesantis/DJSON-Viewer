@@ -4,3 +4,4 @@ compass_app_log.txt
 /.sass-cache/
 /.idea/
 *.iml
+*pem
