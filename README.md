@@ -2,6 +2,7 @@ JSON Formatter
 ==============
 
 Chrome extension for printing JSON and JSONP nicely when you visit it 'directly' in a browser tab.
+Fork from [callumlocke json-formatter](https://github.com/callumlocke/json-formatter): 
 
 Features
 --------
@@ -29,12 +30,6 @@ Installation
 * enable "Developer mode",
 * click "Load unpacked extension",
 * select the `extension` folder in this repo.
-
-**Some URLs to try it on:**
-
-* http://feeds.delicious.com/v2/json/popular?callback=hello
-* http://gdata.youtube.com/feeds/api/standardfeeds/most_popular?alt=json&v=2
-* http://twitter.com/statuses/public_timeline.json
 
 FAQ
 ---
