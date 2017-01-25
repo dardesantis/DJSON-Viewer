@@ -22,9 +22,6 @@
 
  */
 
-/*jshint eqeqeq:true, forin:true, strict:true */
-/*global chrome, console */
-
 (function() {
 
     "use strict" ;
@@ -34,7 +31,6 @@
         jfStyleEl,
         slowAnalysisTimeout,
         port,
-        startTime = +(new Date()),
         domReadyTime,
         isJsonTime,
         exitedNotJsonTime,
@@ -205,7 +201,6 @@
                 displayedFormattedJsonTime = Date.now() ;
 
                 // Log times
-                //console.log('DOM ready took '+ (domReadyTime - startTime) +'ms' ) ;
                 //console.log('Confirming as JSON took '+ (isJsonTime - domReadyTime) +'ms' ) ;
                 //console.log('Formatting & displaying JSON took '+ (displayedFormattedJsonTime - isJsonTime) +'ms' ) ;
                 // console.log('JSON detected and formatted in ' + ( displayedFormattedJsonTime - domReadyTime ) + ' ms') ;

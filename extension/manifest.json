@@ -1,17 +1,18 @@
 {
   "name": "DJSON Viewer",
+  "short_name": "DJSON Viewer",
   "version": "1.0.0",
   "manifest_version": 2,
-  "description": "Makes JSON easy to read. Open source.",
+  "description": "Makes JSON easy to read. From Web or File. Open source.",
   "homepage_url": "https://github.com/dardesantis/DJSON-Viewer",
   "minimum_chrome_version": "21",
   "icons": {
-       "128": "icons/128.png",
-       "32": "icons/32.png"
+       "128": "images/128.png",
+       "32": "images/32.png"
   },
   "browser_action": {
     "default_icon": {
-      "32": "icons/32.png"
+      "32": "images/32.png"
     },
     "default_title": "DJSON Viewer"
   },

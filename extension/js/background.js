@@ -22,9 +22,6 @@
 
  */
 
-/*jshint eqeqeq:true, forin:true, strict:true */
-/*global chrome, console */
-
 (function () {
   
   "use strict" ;
