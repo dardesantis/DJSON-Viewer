@@ -1,5 +1,5 @@
 {
-  "name": "DJSON Formatter",
+  "name": "DJSON Viewer",
   "version": "1.0.0",
   "manifest_version": 2,
   "description": "Makes JSON easy to read. Open source.",
@@ -8,6 +8,12 @@
   "icons": {
        "128": "icons/128.png",
        "32": "icons/32.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "32": "icons/32.png"
+    },
+    "default_title": "DJSON Viewer"
   },
   "background": {
     "scripts": ["js/background.js"]

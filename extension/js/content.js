@@ -1,14 +1,6 @@
-// ==ClosureCompiler==
-// @compilation_level ADVANCED_OPTIMIZATIONS
-// @output_file_name content.js
-// @externs_url http://closure-compiler.googlecode.com/svn/trunk/contrib/externs/chrome_extensions.js
-// @js_externs var console = {assert: function(){}};
-// @formatting pretty_print
-// ==/ClosureCompiler==
-
 /** @license
- JSON Formatter | MIT License
- Copyright 2012 Callum Locke
+ DJSON Viewer | MIT License
+ Copyright 2016 Dario De Santis
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in

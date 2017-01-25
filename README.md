@@ -1,4 +1,4 @@
-JSON Formatter aka DJSON Viewer
+DJSON Viewer
 ==============
 
 Chrome extension for printing JSON and JSONP nicely when you visit it 'directly' in a browser tab.
@@ -7,14 +7,15 @@ Fork from [callumlocke json-formatter](https://github.com/callumlocke/json-forma
 Features
 --------
 
-* JSONP support
-* Fast, even on long pages
-* Works on any valid JSON page – URL doesn't matter
+* JSON & JSONP support
 * Syntax highlighting
 * Collapsible trees, with indent guides
+* Recursive collapsible elements
 * Clickable URLs
-* Buttons for switching between raw and parsed JSON
-* Parsed JSON is exported as a global variable, `json`, so you can inspect it in the console
+* Toggle between raw and parsed JSON
+* Works on any valid JSON page – URL doesn't matter
+* Works on local files too (if you enable this in `chrome://extensions`)
+* You can inspect the JSON by typing `json` in the console
 
 A background worker is used to prevent the UI freezing when processing very long JSON pages.
 
@@ -23,7 +24,8 @@ Installation
 
 **Option 1** – install it using the packed version:
 * clone/download this repo or just download the file djson-viewer.crx,
-* drag the djson-viewer.crx file in a Chrome window
+* open Chrome and go to `chrome://chrome/extensions/`,
+* drag the djson-viewer.crx into Chrome
 * accept to install the extension
 
 **Option 2** – install it from source:
@@ -33,6 +35,11 @@ Installation
 * enable "Developer mode",
 * click "Load unpacked extension",
 * select the `extension` folder in this repo.
+
+Pro Tip
+------------
+* Hold down control (or cmd on Mac) while collapsing a tree if you want to collapse all its siblings too.
+* Hold down shift while collapsing a tree if you want to collapse also all his children
 
 FAQ
 ---

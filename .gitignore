@@ -3,5 +3,6 @@ compass_app_log.txt
 /node_modules/
 /.sass-cache/
 /.idea/
+/store/
 *.iml
 *pem
