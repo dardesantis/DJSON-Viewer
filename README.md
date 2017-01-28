@@ -18,7 +18,7 @@ Features
 * Toggle between raw and parsed JSON
 * Works on any valid JSON page – URL doesn't matter
 * Works on local files too (if you enable this in `chrome://extensions`)
-* You can inspect the JSON by typing `json` in the console
+* You can inspect the JSON by typing `djson` in the console
 * Counts items and properties in a collection
 
 A background worker is used to prevent the UI freezing when processing very long JSON pages.

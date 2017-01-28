@@ -39,7 +39,7 @@
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         chrome.tabs.getCurrent(function (tab) {
-            if(tab.url == chrome.extension.getURL('empty.html')){
+            if(tab.url == chrome.extension.getURL('json.html')){
                 while (document.body.firstChild) {
                     document.body.removeChild(document.body.firstChild);
                 }
@@ -223,15 +223,13 @@
                     setTimeout(function () {
                         try{
                             var script = document.createElement("script") ;
-                            script.innerHTML = 'window.json = ' + msg[2] + ';' ;
+                            script.innerHTML = 'window.djson = ' + msg[2] + ';' ;
                             document.head.appendChild(script) ;
-                            console.log('DJSON Viewer: Type "json" to inspect.') ;
+                            if(typeof window.djson === "undefined") {
+                                window.djson = JSON.parse(msg[2]);
+                            }
+                            console.log('DJSON Viewer: Type "djson" to inspect.') ;
                         } catch (ex) {}
-                    }, 100);
-
-                    setTimeout(function () {
-                        window.json = JSON.parse(msg[2]);
-                        console.log('DJSON Viewer: Type "json" to inspect.');
                     }, 100);
 
                     break;

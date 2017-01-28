@@ -118,7 +118,7 @@
         if (jsonInput.length > 0) {
             try {
                 JSON.parse(jsonInput);
-                var viewTabUrl = chrome.extension.getURL('empty.html');
+                var viewTabUrl = chrome.extension.getURL('json.html');
                 chrome.tabs.query({url: viewTabUrl}, function (tabs) {
                     if (tabs.length > 0) {
                         chrome.tabs.update(tabs[0].id, {'active': true}, function (tab) {
