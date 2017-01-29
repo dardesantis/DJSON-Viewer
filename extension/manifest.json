@@ -3,7 +3,7 @@
   "short_name": "DJSON Viewer",
   "version": "0.2.0",
   "manifest_version": 2,
-  "description": "Simple extension to format and view JSON, from Web or File. Open source.",
+  "description": "Extension to format and view JSON, from Web or File.",
   "homepage_url": "https://github.com/dardesantis/DJSON-Viewer",
   "minimum_chrome_version": "21",
   "icons": {
@@ -24,5 +24,5 @@
   "content_scripts": [
     { "matches": ["<all_urls>"], "js": ["js/content.js"], "run_at": "document_start" }
   ],
-  "permissions":["clipboardWrite", "tabs"]
+  "permissions":["<all_urls>", "clipboardWrite", "tabs"]
 }

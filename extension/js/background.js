@@ -1,6 +1,6 @@
 /** @license
  DJSON Viewer | MIT License
- Copyright 2016 Dario De Santis
+ Copyright 2017 Dario De Santis
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -128,16 +128,8 @@
         return idx;
     }
 
-    // function spin(seconds) {
-    //   // spin - Hog the CPU for the specified number of seconds
-    //   // (for simulating long processing times in development)
-    //   var stop = +new Date() + (seconds*1000)  ;
-    //   while (new Date() < stop) {}
-    //   return true ;
-    // }
-
     // Record current version (in case future update wants to know)
-    localStorage.djsonVersion = '0.1.0';
+    localStorage.djsonVersion = '0.2.0';
 
     // Template elements
     var templates,
@@ -150,12 +142,6 @@
         return span;
     }
 
-    function getSpanText(innerText) {
-        var span = baseSpan.cloneNode(false);
-        span.innerText = innerText;
-        return span;
-    }
-
     function getSpanClass(className) {
         var span = baseSpan.cloneNode(false);
         span.className = className;
@@ -164,9 +150,9 @@
 
     // Create template nodes
     var templatesObj = {
-        t_kvov: getSpanClass('kvov'),
-        t_exp: getSpanClass('e'),
-        t_key: getSpanClass('k'),
+        t_dObj: getSpanClass('dObj'),
+        t_exp: getSpanClass('expander'),
+        t_key: getSpanClass('key'),
         t_string: getSpanClass('s'),
         t_number: getSpanClass('n'),
 
@@ -179,7 +165,7 @@
         t_oBracket: getSpanBoth('[', 'b'),
         t_cBracket: getSpanBoth(']', 'b'),
 
-        t_ellipsis: getSpanClass('ell'),
+        t_ellipsis: getSpanClass('ellipsis'),
         t_blockInner: getSpanClass('blockInner'),
 
         t_colonAndSpace: document.createTextNode(':\u00A0'),
@@ -188,9 +174,9 @@
     };
 
     // Core recursive DOM-building function
-    function getKvovDOM(value, keyName) {
+    function getdObjDOM(value, keyName) {
         var type,
-            kvov,
+            dObj,
             nonZeroSize,
             templates = templatesObj, // bring into scope for tiny speed boost
             objKey,
@@ -213,8 +199,8 @@
             type = TYPE_OBJECT;
         }
 
-        // Root node for this kvov
-        kvov = templates.t_kvov.cloneNode(false);
+        // Root node for this dObj
+        dObj = templates.t_dObj.cloneNode(false);
 
         // Add an 'expander' first (if this is object/array with non-zero size)
         if (type === TYPE_OBJECT || type === TYPE_ARRAY) {
@@ -226,31 +212,31 @@
                 }
             }
             if (nonZeroSize) {
-                kvov.appendChild(templates.t_exp.cloneNode(false));
+                dObj.appendChild(templates.t_exp.cloneNode(false));
             }
         }
 
         // If there's a key, add that before the value
         if (keyName !== false) { // NB: "" is a legal keyname in JSON
-            // This kvov must be an object property
-            kvov.classList.add('objProp');
+            // This dObj must be an object property
+            dObj.classList.add('dObjProp');
             // Create a span for the key name
             keySpan = templates.t_key.cloneNode(false);
             keySpan.textContent = JSON.stringify(keyName).slice(1, -1); // remove quotes
-            // Add it to kvov, with quote marks
-            kvov.appendChild(templates.t_dblqText.cloneNode(false));
-            kvov.appendChild(keySpan);
-            kvov.appendChild(templates.t_dblqText.cloneNode(false));
+            // Add it to dObj, with quote marks
+            dObj.appendChild(templates.t_dblqText.cloneNode(false));
+            dObj.appendChild(keySpan);
+            dObj.appendChild(templates.t_dblqText.cloneNode(false));
             // Also add ":&nbsp;" (colon and non-breaking space)
-            kvov.appendChild(templates.t_colonAndSpace.cloneNode(false));
+            dObj.appendChild(templates.t_colonAndSpace.cloneNode(false));
         }
         else {
             // This is an array element instead
-            kvov.classList.add('arrElem');
+            dObj.classList.add('arrElem');
         }
 
         // Generate DOM for this value
-        var blockInner, childKvov;
+        var blockInner, childdObj;
         switch (type) {
             case TYPE_STRING:
                 // If string is a URL, get a link, otherwise get a span
@@ -271,89 +257,89 @@
                 valueElement.appendChild(templates.t_dblqText.cloneNode(false));
                 valueElement.appendChild(innerStringEl);
                 valueElement.appendChild(templates.t_dblqText.cloneNode(false));
-                kvov.appendChild(valueElement);
+                dObj.appendChild(valueElement);
                 break;
 
             case TYPE_NUMBER:
                 // Simply add a number element (span.n)
                 valueElement = templates.t_number.cloneNode(false);
                 valueElement.innerText = value;
-                kvov.appendChild(valueElement);
+                dObj.appendChild(valueElement);
                 break;
 
             case TYPE_OBJECT:
                 // Add opening brace
-                kvov.appendChild(templates.t_oBrace.cloneNode(true));
+                dObj.appendChild(templates.t_oBrace.cloneNode(true));
                 // If any properties, add a blockInner containing k/v pair(s)
                 if (nonZeroSize) {
-                    // Add ellipsis (empty, but will be made to do something when kvov is collapsed)
-                    kvov.appendChild(templates.t_ellipsis.cloneNode(false));
+                    // Add ellipsis (empty, but will be made to do something when dObj is collapsed)
+                    dObj.appendChild(templates.t_ellipsis.cloneNode(false));
                     // Create blockInner, which indents (don't attach yet)
                     blockInner = templates.t_blockInner.cloneNode(false);
-                    // For each key/value pair, add as a kvov to blockInner
+                    // For each key/value pair, add as a dObj to blockInner
                     var count = 0, k, comma;
                     for (k in value) {
                         if (value.hasOwnProperty(k)) {
                             count++;
-                            childKvov = getKvovDOM(value[k], k);
+                            childdObj = getdObjDOM(value[k], k);
                             // Add comma
                             comma = templates.t_commaText.cloneNode();
-                            childKvov.appendChild(comma);
-                            blockInner.appendChild(childKvov);
+                            childdObj.appendChild(comma);
+                            blockInner.appendChild(childdObj);
                         }
                     }
                     // Now remove the last comma
-                    childKvov.removeChild(comma);
+                    childdObj.removeChild(comma);
                     // Add blockInner
-                    kvov.appendChild(blockInner);
+                    dObj.appendChild(blockInner);
                 }
 
                 // Add closing brace
-                kvov.appendChild(templates.t_cBrace.cloneNode(true));
+                dObj.appendChild(templates.t_cBrace.cloneNode(true));
                 break;
 
             case TYPE_ARRAY:
                 // Add opening bracket
-                kvov.appendChild(templates.t_oBracket.cloneNode(true));
+                dObj.appendChild(templates.t_oBracket.cloneNode(true));
                 // If non-zero length array, add blockInner containing inner vals
                 if (nonZeroSize) {
                     // Add ellipsis
-                    kvov.appendChild(templates.t_ellipsis.cloneNode(false));
+                    dObj.appendChild(templates.t_ellipsis.cloneNode(false));
                     // Create blockInner (which indents) (don't attach yet)
                     blockInner = templates.t_blockInner.cloneNode(false);
                     // For each key/value pair, add the markup
                     for (var i = 0, length = value.length, lastIndex = length - 1; i < length;
                          i++) {
-                        // Make a new kvov, with no key
-                        childKvov = getKvovDOM(value[i], false);
+                        // Make a new dObj, with no key
+                        childdObj = getdObjDOM(value[i], false);
                         // Add comma if not last one
                         if (i < lastIndex) {
-                            childKvov.appendChild(templates.t_commaText.cloneNode());
+                            childdObj.appendChild(templates.t_commaText.cloneNode());
                         }
-                        // Append the child kvov
-                        blockInner.appendChild(childKvov);
+                        // Append the child dObj
+                        blockInner.appendChild(childdObj);
                     }
                     // Add blockInner
-                    kvov.appendChild(blockInner);
+                    dObj.appendChild(blockInner);
                 }
                 // Add closing bracket
-                kvov.appendChild(templates.t_cBracket.cloneNode(true));
+                dObj.appendChild(templates.t_cBracket.cloneNode(true));
                 break;
 
             case TYPE_BOOL:
                 if (value) {
-                    kvov.appendChild(templates.t_true.cloneNode(true));
+                    dObj.appendChild(templates.t_true.cloneNode(true));
                 } else {
-                    kvov.appendChild(templates.t_false.cloneNode(true));
+                    dObj.appendChild(templates.t_false.cloneNode(true));
                 }
                 break;
 
             case TYPE_NULL:
-                kvov.appendChild(templates.t_null.cloneNode(true));
+                dObj.appendChild(templates.t_null.cloneNode(true));
                 break;
         }
 
-        return kvov;
+        return dObj;
     }
 
     // Function to convert object to an HTML string
@@ -361,18 +347,18 @@
 
         // spin(5) ;
 
-        // Format object (using recursive kvov builder)
-        var rootKvov = getKvovDOM(obj, false);
+        // Format object (using recursive dObj builder)
+        var rootDObj = getdObjDOM(obj, false);
 
         // The whole DOM is now built.
 
         // Set class on root node to identify it
-        rootKvov.classList.add('rootKvov');
+        rootDObj.classList.add('rootDObj');
 
-        // Make div#formattedJson and append the root kvov
+        // Make div#formattedJson and append the root dObj
         var divFormattedJson = document.createElement('DIV');
         divFormattedJson.id = 'formattedJson';
-        divFormattedJson.appendChild(rootKvov);
+        divFormattedJson.appendChild(rootDObj);
 
         // Convert it to an HTML string (shame about this step, but necessary for passing it through to the content page)
         var returnHTML = divFormattedJson.outerHTML;

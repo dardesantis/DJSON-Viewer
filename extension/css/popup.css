@@ -117,7 +117,7 @@
     line-height: 1.15em;
 }
 
-.outerDiv {
+.containerDiv {
     position: relative;
     width: 330px;
     border: 4px rgb(38, 38, 25);
@@ -137,6 +137,6 @@ button:focus {
     outline: none;
 }
 
-.backgroundColor {
+body {
     background-color: #efefef;
 }

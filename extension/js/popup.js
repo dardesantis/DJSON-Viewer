@@ -1,3 +1,27 @@
+/** @license
+ DJSON Viewer | MIT License
+ Copyright 2017 Dario De Santis
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in
+ the Software without restriction, including without limitation the rights to
+ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ of the Software, and to permit persons to whom the Software is furnished to do
+ so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+
+ */
+
 (function () {
     JSON._parse = JSON.parse;
     JSON.parse = function (json) {
@@ -70,10 +94,10 @@
 
     function beautifyJSON() {
         try {
-            var ugly = document.getElementById('dumpArea').value;
+            var ugly = document.getElementById('dumpTextArea').value;
             if (ugly.length > 0) {
                 var obj = JSON.parse(ugly);
-                document.getElementById('dumpArea').value = JSON.stringify(obj, undefined, 4);
+                document.getElementById('dumpTextArea').value = JSON.stringify(obj, undefined, 4);
                 copyMe();
                 document.getElementById('infoArea').innerHTML =
                     "JSON Beautified and copied in your clipboard";
@@ -87,10 +111,10 @@
 
     function minifyJSON() {
         try {
-            var formatted = document.getElementById('dumpArea').value;
+            var formatted = document.getElementById('dumpTextArea').value;
             if (formatted.length > 0) {
                 JSON.parse(formatted);
-                document.getElementById('dumpArea').value = JSON.minify(formatted);
+                document.getElementById('dumpTextArea').value = JSON.minify(formatted);
                 copyMe();
                 document.getElementById('infoArea').innerHTML =
                     "JSON Minified and copied in your clipboard";
@@ -103,7 +127,7 @@
     }
 
     function copyMe() {
-        var textArea = document.getElementById("dumpArea");
+        var textArea = document.getElementById("dumpTextArea");
         var cln = textArea.cloneNode(true);
         cln.style.height = 0;
         document.body.appendChild(cln);
@@ -114,7 +138,7 @@
     }
 
     function tabView() {
-        var jsonInput = document.getElementById('dumpArea').value;
+        var jsonInput = document.getElementById('dumpTextArea').value;
         if (jsonInput.length > 0) {
             try {
                 JSON.parse(jsonInput);

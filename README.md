@@ -4,7 +4,7 @@ DJSON Viewer
 ==============
 
 Chrome extension for printing and formatting JSON and JSONP nicely when you visit it 'directly' in a browser tab.
-Initial base from [callumlocke json-formatter](https://github.com/callumlocke/json-formatter): 
+Initial base from [callumlocke json-formatter](https://github.com/callumlocke/json-formatter)
 
 Features
 --------
@@ -45,7 +45,7 @@ Installation
 * select the `extension` folder in this repo.
 
 Pro Tip
-------------
+--------
 * Hold down control (or cmd on Mac) while collapsing a tree if you want to collapse all its siblings too.
 * Hold down shift while collapsing a tree if you want to collapse also all his children
 
@@ -69,3 +69,26 @@ Plain JavaScript objects are [unordered collections of properties](http://www.ec
 ##### But I just want it to be in order for readability
 
 That would require manually parsing the JSON string with regular expressions (instead of using `JSON.parse`), which would be too slow. And it's not a good idea to go down the road of representing the data differently from how the engine actually sees it.
+
+LICENCE
+-------
+DJSON Viewer | MIT License
+Copyright 2017 Dario De Santis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
