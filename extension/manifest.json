@@ -1,18 +1,18 @@
 {
   "name": "DJSON Viewer and Formatter",
   "short_name": "DJSON Viewer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "manifest_version": 2,
   "description": "Extension to format and view JSON, from Web or File.",
   "homepage_url": "https://github.com/dardesantis/DJSON-Viewer",
   "minimum_chrome_version": "21",
   "icons": {
-       "128": "images/128.png",
-       "32": "images/32.png"
+       "128": "icons/128.png",
+       "32": "icons/32.png"
   },
   "browser_action": {
     "default_icon": {
-      "32": "images/32.png"
+      "32": "icons/32.png"
     },
     "default_title": "DJSON Viewer",
     "default_popup": "popup.html"

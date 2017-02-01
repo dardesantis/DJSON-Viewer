@@ -129,7 +129,7 @@
     }
 
     // Record current version (in case future update wants to know)
-    localStorage.djsonVersion = '0.2.0';
+    localStorage.djsonVersion = '0.2.1';
 
     // Template elements
     var templates,

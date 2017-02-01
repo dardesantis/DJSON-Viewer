@@ -1,10 +1,10 @@
-![JSONViewer Logo](https://github.com/dardesantis/DJSON-Viewer/raw/master/extension/images/128.png)
+![JSONViewer Logo](https://github.com/dardesantis/DJSON-Viewer/raw/master/extension/icons/128.png)
 
 DJSON Viewer
 ==============
 
 Chrome extension for printing and formatting JSON and JSONP nicely when you visit it 'directly' in a browser tab.
-Initial base from [callumlocke json-formatter](https://github.com/callumlocke/json-formatter)
+Initial base of the formatter from: [callumlocke json-formatter](https://github.com/callumlocke/json-formatter)
 
 Features
 --------

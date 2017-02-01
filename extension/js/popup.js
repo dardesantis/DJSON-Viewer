@@ -23,6 +23,9 @@
  */
 
 (function () {
+
+    "use strict";
+
     JSON._parse = JSON.parse;
     JSON.parse = function (json) {
         try {
@@ -90,77 +93,82 @@
 
     document.getElementById("callBeautify").addEventListener("click", beautifyJSON);
     document.getElementById("callMinify").addEventListener("click", minifyJSON);
-    document.getElementById("callView").addEventListener("click", tabView);
+    document.getElementById("callView").addEventListener("click", function(){ tabView(false) });
+    document.getElementById("callViewNewTab").addEventListener("click", function(){ tabView(true) });
 
     function beautifyJSON() {
+        var dumpTextArea = document.getElementById('dumpTextArea');
+        var infoArea = document.getElementById('infoArea');
         try {
-            var ugly = document.getElementById('dumpTextArea').value;
+            var ugly = dumpTextArea.value;
             if (ugly.length > 0) {
                 var obj = JSON.parse(ugly);
-                document.getElementById('dumpTextArea').value = JSON.stringify(obj, undefined, 4);
-                copyMe();
-                document.getElementById('infoArea').innerHTML =
-                    "JSON Beautified and copied in your clipboard";
+                dumpTextArea.value = JSON.stringify(obj, undefined, 4);
+                copyMe(dumpTextArea);
+                infoArea.innerHTML = "JSON Beautified and copied in your clipboard";
             } else {
-                document.getElementById('infoArea').innerHTML = 'write a Json in the textarea';
+                infoArea.innerHTML = 'write a Json in the textarea';
             }
         } catch (exc) {
-            document.getElementById('infoArea').innerHTML = exc + '';
+            infoArea.innerHTML = exc + '';
         }
     }
 
     function minifyJSON() {
+        var dumpTextArea = document.getElementById('dumpTextArea');
+        var infoArea = document.getElementById('infoArea');
         try {
-            var formatted = document.getElementById('dumpTextArea').value;
+            var formatted = dumpTextArea.value;
             if (formatted.length > 0) {
                 JSON.parse(formatted);
-                document.getElementById('dumpTextArea').value = JSON.minify(formatted);
-                copyMe();
-                document.getElementById('infoArea').innerHTML =
-                    "JSON Minified and copied in your clipboard";
+                dumpTextArea.value = JSON.minify(formatted);
+                copyMe(dumpTextArea);
+                infoArea.innerHTML = "JSON Minified and copied in your clipboard";
             } else {
-                document.getElementById('infoArea').innerHTML = 'write a Json in the textarea';
+                infoArea.innerHTML = 'write a Json in the textarea';
             }
         } catch (exc) {
-            document.getElementById('infoArea').innerHTML = exc + '';
+            infoArea.innerHTML = exc + '';
         }
     }
 
-    function copyMe() {
-        var textArea = document.getElementById("dumpTextArea");
+    function copyMe(textArea) {
         var cln = textArea.cloneNode(true);
         cln.style.height = 0;
         document.body.appendChild(cln);
         cln.select();
         document.execCommand("copy");
-        document.getElementById('infoArea').innerHTML = "Text Copied";
         cln.remove();
     }
 
-    function tabView() {
+    function tabView(newTab) {
         var jsonInput = document.getElementById('dumpTextArea').value;
         if (jsonInput.length > 0) {
             try {
                 JSON.parse(jsonInput);
                 var viewTabUrl = chrome.extension.getURL('json.html');
-                chrome.tabs.query({url: viewTabUrl}, function (tabs) {
-                    if (tabs.length > 0) {
-                        chrome.tabs.update(tabs[0].id, {'active': true}, function (tab) {
+                chrome.tabs.query({url: viewTabUrl, currentWindow: true}, function (tabs) {
+                    var tabLenght = tabs.length;
+                    if (tabLenght > 0 && !newTab) {
+                        var tabIdToSend = null;
+                        for(var j=0; j<tabLenght; j++){
+                            if(tabs[j].active){
+                                tabIdToSend = tabs[j].id;
+                                break;
+                            }
+                        }
+                        tabIdToSend = tabIdToSend !== null ? tabIdToSend : tabs[0].id;
+                        chrome.tabs.update(tabIdToSend, {'active': true}, function (tab) {
                             chrome.tabs.sendMessage(tab.id, {json: jsonInput});
                         });
                     } else {
-                        chrome.tabs.create({url: viewTabUrl}, function (tab) {
-                            chrome.tabs.executeScript(tab.id, {file: "notExisting.js"}, function () {
-                                chrome.tabs.executeScript(tab.id, {file: "anotherNotExisting.js"}, function () {
-                                    chrome.tabs.executeScript(tab.id, {file: "js/content.js"}, function () {
-                                        chrome.tabs.sendMessage(tab.id, {json: jsonInput});
-                                    });
-                                });
+                        chrome.tabs.create({url: viewTabUrl, active: true}, function (tab) {
+                            chrome.tabs.executeScript(tab.id, {file: "js/content.js", runAt: "document_start"}, function () {
+                                chrome.tabs.sendMessage(tab.id, {json: jsonInput});
                             });
                         });
                     }
                 });
-                return false;
             } catch (exc) {
                 document.getElementById('infoArea').innerHTML = exc + '';
             }

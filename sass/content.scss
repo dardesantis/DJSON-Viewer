@@ -206,12 +206,19 @@ a:hover, a:active {
   padding: 10px 0 0 8px;
   margin: 0;
   color: #333;
-}
 
-#formattingMsg > svg {
-  margin: 0 7px;
-  position: relative;
-  top: 1px;
+  .loader {
+    position: relative;
+    top: 5px;
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 12px;
+    height: 12px;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+    display: inline-block
+  }
 }
 
 /* Misc */
@@ -225,18 +232,11 @@ span {
 
 /* Spinner */
 @-webkit-keyframes spin {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
 }
 
-#spinner {
-  -webkit-animation: spin 2s 0 infinite;
-}
-
-* {
-  -webkit-font-smoothing: antialiased;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

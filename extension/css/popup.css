@@ -59,7 +59,7 @@
     font-family: Arial, serif;
     font-size: 15px;
     font-weight: bold;
-    padding: 4px 124px;
+    padding: 4px 110px;
     text-decoration: none;
     margin-left: 5px;
     margin-top: 3px;
@@ -128,6 +128,17 @@
 .infoDiv {
     margin-left: 6px;
     margin-top: 7px;
+}
+
+.newTab {
+    background: url(/images/new-tab.png) no-repeat center transparent;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background-size: 24px;
+    position: relative;
+    top: 6px;
+    cursor: pointer;
 }
 
 input:focus,

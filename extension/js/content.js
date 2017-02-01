@@ -31,10 +31,8 @@
         djsonStyleEl,
         slowAnalysisTimeout,
         port,
-        domReadyTime,
-        isJsonTime,
-        exitedNotJsonTime,
-        displayedFormattedJsonTime
+        buttonPlain,
+        buttonFormatted
         ;
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -44,7 +42,7 @@
                     document.body.removeChild(document.body.firstChild);
                 }
                 var pre = document.createElement('pre');
-                pre.id = 'emptypre';
+                pre.id = 'emptyPre';
                 pre.innerText = request.json;
                 document.body.appendChild(pre);
                 ready();
@@ -64,14 +62,10 @@
             switch (msg[0]) {
                 case 'NOT JSON' :
                     pre.hidden = false;
-                    // console.log('Unhidden the PRE') ;
                     document.body.removeChild(djsonContent);
-                    exitedNotJsonTime = +(new Date());
                     break;
 
                 case 'FORMATTING' :
-                    isJsonTime = +(new Date());
-
                     // It is JSON, and it's now being formatted in the background worker.
 
                     // Clear the slowAnalysisTimeout (if the BG worker had taken longer than 1s to respond with an answer to whether or not this is JSON, then it would have fired, unhiding the PRE... But now that we know it's JSON, we can clear this timeout, ensuring the PRE stays hidden.)
@@ -81,22 +75,13 @@
                     djsonStyleEl = document.createElement('style');
                     djsonStyleEl.id = 'djsonStyleEl';
                     document.head.appendChild(djsonStyleEl);
-
                     djsonStyleEl.insertAdjacentHTML(
                         'beforeend',
-                        'body{-webkit-user-select:text;overflow-y:scroll !important;margin:0;position:relative}#optionBar{-webkit-user-select:none;display:block;position:absolute;top:9px;right:17px}#buttonFormatted,#buttonPlain,#expandAll,#collapseAll{-webkit-border-radius:2px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,0.1);-webkit-user-select:none;background:-webkit-linear-gradient(#fafafa, #f4f4f4 40%, #e5e5e5);border:1px solid #aaa;color:#444;font-size:12px;margin-bottom:0;min-width:4em;padding:3px 0;position:relative;z-index:10;display:inline-block;width:80px;text-shadow:1px 1px rgba(255,255,255,0.3)}#collapseAll{margin-right:10px}#buttonFormatted{margin-left:0;border-top-left-radius:0;border-bottom-left-radius:0}#buttonPlain{margin-right:0;border-top-right-radius:0;border-bottom-right-radius:0;border-right:none}#buttonFormatted:hover,#buttonPlain:hover,#expandAll:hover,#collapseAll:hover{-webkit-box-shadow:0 1px 3px rgba(0,0,0,0.2);background:#ebebeb -webkit-linear-gradient(#fefefe, #f8f8f8 40%, #e9e9e9);border-color:#999;color:#222}#buttonFormatted:active,#buttonPlain:active{-webkit-box-shadow:inset 0 1px 3px rgba(0,0,0,0.2);background:#ebebeb -webkit-linear-gradient(#f4f4f4, #efefef 40%, #dcdcdc);color:#333}#buttonFormatted.selected,#buttonPlain.selected{-webkit-box-shadow:inset 0 1px 5px rgba(0,0,0,0.2);background:#ebebeb -webkit-linear-gradient(#e4e4e4, #dfdfdf 40%, #dcdcdc);color:#333}#buttonFormatted:focus,#buttonPlain:focus,#expandAll:focus,#collapseAll:focus{outline:0}#jsonpOpener,#jsonpCloser{padding:4px 0 0 8px;color:black;margin-bottom:-6px}#jsonpCloser{margin-top:0}#formattedJson{padding-left:28px;padding-top:6px}.dObj{display:block;padding-left:20px;margin-left:-20px;position:relative}.collapsed{white-space:nowrap}.collapsed>.blockInner{display:none}.collapsed>.ellipsis:after{content:"…";font-weight:bold}.collapsed>.ellipsis{margin:0 4px;color:#888}.collapsed .dObj{display:inline}.expander{width:20px;height:18px;display:block;position:absolute;left:-2px;top:1px;z-index:5;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAD1JREFUeNpiYGBgOADE%2F3Hgw0DM4IRHgSsDFOzFInmMAQnY49ONzZRjDFiADT7dMLALiE8y4AGW6LoBAgwAuIkf%2F%2FB7O9sAAAAASUVORK5CYII%3D") no-repeat center center;opacity:0.15}.collapsed>.expander{-webkit-transform:rotate(-90deg);width:18px;height:20px;left:0;top:0}.expander:hover{opacity:0.35}.expander:active{opacity:0.5}.collapsed .dObj .expander{display:none}.blockInner{display:block;padding-left:24px;border-left:1px dotted #bbb;margin-left:2px}#formattedJson,#jsonpOpener,#jsonpCloser{color:#333;font:13px/18px monospace}#formattedJson{color:#444}.b{font-weight:bold}.s{color:#0B7500;word-wrap:break-word}a:link,a:visited{text-decoration:none;color:inherit}a:hover,a:active{text-decoration:underline;color:#050}.bl,.nl,.n{font-weight:bold;color:#1A01CC}.key{color:black}#formattingMsg{font:13px "Lucida Grande", "Segoe UI", "Tahoma";padding:10px 0 0 8px;margin:0;color:#333}#formattingMsg>svg{margin:0 7px;position:relative;top:1px}[hidden]{display:none !important}span{white-space:pre-wrap}@-webkit-keyframes spin{from{-webkit-transform:rotate(0deg)}to{-webkit-transform:rotate(360deg)}}#spinner{-webkit-animation:spin 2s 0 infinite}*{-webkit-font-smoothing:antialiased}'
+                        'body{-webkit-user-select:text;overflow-y:scroll !important;margin:0;position:relative}#optionBar{-webkit-user-select:none;display:block;position:absolute;top:9px;right:17px}#buttonFormatted,#buttonPlain,#expandAll,#collapseAll{-webkit-border-radius:2px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,0.1);-webkit-user-select:none;background:-webkit-linear-gradient(#fafafa, #f4f4f4 40%, #e5e5e5);border:1px solid #aaa;color:#444;font-size:12px;margin-bottom:0;min-width:4em;padding:3px 0;position:relative;z-index:10;display:inline-block;width:80px;text-shadow:1px 1px rgba(255,255,255,0.3)}#collapseAll{margin-right:10px}#buttonFormatted{margin-left:0;border-top-left-radius:0;border-bottom-left-radius:0}#buttonPlain{margin-right:0;border-top-right-radius:0;border-bottom-right-radius:0;border-right:none}#buttonFormatted:hover,#buttonPlain:hover,#expandAll:hover,#collapseAll:hover{-webkit-box-shadow:0 1px 3px rgba(0,0,0,0.2);background:#ebebeb -webkit-linear-gradient(#fefefe, #f8f8f8 40%, #e9e9e9);border-color:#999;color:#222}#buttonFormatted:active,#buttonPlain:active{-webkit-box-shadow:inset 0 1px 3px rgba(0,0,0,0.2);background:#ebebeb -webkit-linear-gradient(#f4f4f4, #efefef 40%, #dcdcdc);color:#333}#buttonFormatted.selected,#buttonPlain.selected{-webkit-box-shadow:inset 0 1px 5px rgba(0,0,0,0.2);background:#ebebeb -webkit-linear-gradient(#e4e4e4, #dfdfdf 40%, #dcdcdc);color:#333}#buttonFormatted:focus,#buttonPlain:focus,#expandAll:focus,#collapseAll:focus{outline:0}#jsonpOpener,#jsonpCloser{padding:4px 0 0 8px;color:black;margin-bottom:-6px}#jsonpCloser{margin-top:0}#formattedJson{padding-left:28px;padding-top:6px}.dObj{display:block;padding-left:20px;margin-left:-20px;position:relative}.collapsed{white-space:nowrap}.collapsed>.blockInner{display:none}.collapsed>.ellipsis:after{content:"…";font-weight:bold}.collapsed>.ellipsis{margin:0 4px;color:#888}.collapsed .dObj{display:inline}.expander{width:20px;height:18px;display:block;position:absolute;left:-2px;top:1px;z-index:5;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAD1JREFUeNpiYGBgOADE%2F3Hgw0DM4IRHgSsDFOzFInmMAQnY49ONzZRjDFiADT7dMLALiE8y4AGW6LoBAgwAuIkf%2F%2FB7O9sAAAAASUVORK5CYII%3D") no-repeat center center;opacity:0.15}.collapsed>.expander{-webkit-transform:rotate(-90deg);width:18px;height:20px;left:0;top:0}.expander:hover{opacity:0.35}.expander:active{opacity:0.5}.collapsed .dObj .expander{display:none}.blockInner{display:block;padding-left:24px;border-left:1px dotted #bbb;margin-left:2px}#formattedJson,#jsonpOpener,#jsonpCloser{color:#333;font:13px/18px monospace}#formattedJson{color:#444}.b{font-weight:bold}.s{color:#0B7500;word-wrap:break-word}a:link,a:visited{text-decoration:none;color:inherit}a:hover,a:active{text-decoration:underline;color:#050}.bl,.nl,.n{font-weight:bold;color:#1A01CC}.key{color:black}#formattingMsg{font:13px "Lucida Grande", "Segoe UI", "Tahoma";padding:10px 0 0 8px;margin:0;color:#333}#formattingMsg .loader{position:relative;top:5px;border:4px solid #f3f3f3;border-radius:50%;border-top:4px solid #3498db;width:12px;height:12px;-webkit-animation:spin 1s linear infinite;animation:spin 1s linear infinite;display:inline-block}[hidden]{display:none !important}span{white-space:pre-wrap}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}'
                     );
 
-                    // Add custom font name if set - FROM FUTURE
-                    // if (typeof settings.fontName === 'string') {
-                    //   djsonStyleEl.insertAdjacentHTML(
-                    //     'beforeend',
-                    //     '#formattedJson,#jsonpOpener,#jsonpCloser{font-family: "' + settings.fontName + '"}'
-                    //   ) ;
-                    // }
-
                     djsonContent.innerHTML =
-                        '<p id="formattingMsg"><svg id="spinner" width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"></path></svg> Formatting...</p>';
+                        '<p id="formattingMsg"><span class="loader"></span> Formatting...</p>';
 
                     var formattingMsg = document.getElementById('formattingMsg');
                     // TODO: set formattingMsg to visible after about 300ms (so faster than this doesn't require it)
@@ -108,16 +93,6 @@
                     // Create option bar
                     var optionBar = document.createElement('div');
                     optionBar.id = 'optionBar';
-
-                    // Show options link, if needed - FROM FUTURE
-                    // if (settings.enableOptionsLink) {
-                    //   var optionsLink = document.createElement('a') ;
-                    //   optionsLink.id = 'optionsLink' ;
-                    //   optionsLink.innerText = 'Options' ;
-                    //   optionsLink.href = settings['optionsUrl'] ;
-                    //   optionsLink.target = '_BLANK' ;
-                    //   optionBar.appendChild(optionsLink) ;
-                    // }
 
                     // Create collapse/expand all button
                     var buttonExpand = document.createElement('button');
@@ -141,8 +116,8 @@
                     );
 
                     // Create toggleFormat button
-                    var buttonPlain = document.createElement('button'),
-                        buttonFormatted = document.createElement('button');
+                    buttonPlain = document.createElement('button');
+                    buttonFormatted = document.createElement('button');
                     buttonPlain.id = 'buttonPlain';
                     buttonPlain.innerText = 'Raw';
                     buttonFormatted.id = 'buttonFormatted';
@@ -208,14 +183,6 @@
                     // Insert HTML content
                     djsonContent.innerHTML = msg[1];
 
-                    displayedFormattedJsonTime = Date.now();
-
-                    // Log times
-                    //console.log('Confirming as JSON took '+ (isJsonTime - domReadyTime) +'ms' ) ;
-                    //console.log('Formatting & displaying JSON took '+ (displayedFormattedJsonTime - isJsonTime) +'ms' ) ;
-                    // console.log('JSON detected and formatted in ' + ( displayedFormattedJsonTime - domReadyTime ) + ' ms') ;
-                    // console.markTimeline('JSON formatted and displayed') ;
-
                     // Export parsed JSON for easy access in console
                     setTimeout(function () {
                         try{
@@ -241,8 +208,6 @@
 
         connectToPort();
 
-        domReadyTime = Date.now();
-
         // First, check if it's a PRE and exit if not
         var bodyChildren = document.body.childNodes;
         pre = bodyChildren[0];
@@ -255,9 +220,7 @@
         if (
             numChildNodes !== 1 ||
             pre.tagName !== 'PRE' ||
-            jsonLength > (3000000) || jsonLength == 0) {
-
-            // console.log('Not even text (or longer than 3MB); exiting') ;
+            jsonLength == 0) {
             // console.log(bodyChildren.length,pre.tagName, pre.innerText.length) ;
 
             // Disconnect the port (without even having used it)
@@ -271,7 +234,6 @@
 
             // Hide the PRE immediately (until we know what to do, to prevent FOUC)
             pre.hidden = true;
-            //console.log('It is text; hidden pre at ') ;
             slowAnalysisTimeout = setTimeout(function () {
                 pre.hidden = false;
             }, 1000);
@@ -391,9 +353,7 @@
 
                 var parent = elem.parentNode,
                     div = djsonContent,
-                    prevBodyHeight = document.body.offsetHeight,
-                    scrollTop = document.body.scrollTop,
-                    parentSiblings
+                    scrollTop = document.body.scrollTop
                     ;
 
                 // Expand or collapse
@@ -438,5 +398,4 @@
             }
         }
     }
-
 })();
