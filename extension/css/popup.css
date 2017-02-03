@@ -39,17 +39,14 @@
 }
 
 .greenButton {
-    -moz-box-shadow: inset -2px 26px 14px -4px #a4e271;
-    -webkit-box-shadow: inset -2px 26px 14px -4px #a4e271;
-    box-shadow: inset -2px 26px 14px -4px #a4e271;
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #89c403), color-stop(1, #77a809));
-    background: -moz-linear-gradient(top, #89c403 5%, #77a809 100%);
-    background: -webkit-linear-gradient(top, #89c403 5%, #77a809 100%);
-    background: -o-linear-gradient(top, #89c403 5%, #77a809 100%);
-    background: -ms-linear-gradient(top, #89c403 5%, #77a809 100%);
-    background: linear-gradient(to bottom, #89c403 5%, #77a809 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#89c403', endColorstr='#77a809', GradientType=0);
-    background-color: #89c403;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #c2e8ff), color-stop(1, #55ace3));
+    background: -moz-linear-gradient(top, #c2e8ff 5%, #55ace3 100%);
+    background: -webkit-linear-gradient(top, #c2e8ff 5%, #55ace3 100%);
+    background: -o-linear-gradient(top, #c2e8ff 5%, #55ace3 100%);
+    background: -ms-linear-gradient(top, #c2e8ff 5%, #55ace3 100%);
+    background: linear-gradient(to bottom, #c2e8ff 5%, #55ace3 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c2e8ff', endColorstr='#55ace3', GradientType=0);
+    background-color: #55ace3;
     -moz-border-radius: 7px;
     -webkit-border-radius: 7px;
     border-radius: 6px;
@@ -67,14 +64,14 @@
 }
 
 .greenButton:hover {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #5cbf2a), color-stop(1, #44c767));
-    background: -moz-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
-    background: -webkit-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
-    background: -o-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
-    background: -ms-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
-    background: linear-gradient(to bottom, #5cbf2a 100%, #44c767 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5cbf2a', endColorstr='#44c767', GradientType=0);
-    background-color: #5cbf2a;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #55ace3), color-stop(1, #c2e8ff));
+    background: -moz-linear-gradient(top, #55ace3 5%, #c2e8ff 100%);
+    background: -webkit-linear-gradient(top, #55ace3 5%, #c2e8ff 100%);
+    background: -o-linear-gradient(top, #55ace3 5%, #c2e8ff 100%);
+    background: -ms-linear-gradient(top, #55ace3 5%, #c2e8ff 100%);
+    background: linear-gradient(to bottom, #55ace3 100%, #c2e8ff 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#55ace3', endColorstr='#c2e8ff', GradientType=0);
+    background-color: #55ace3;
 }
 
 .myButton:active {
