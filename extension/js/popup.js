@@ -162,11 +162,8 @@
                             chrome.tabs.sendMessage(tab.id, {json: jsonInput});
                         });
                     } else {
-                        chrome.tabs.create({url: viewTabUrl, active: true}, function (tab) {
-                            chrome.tabs.executeScript(tab.id, {file: "js/content.js", runAt: "document_start"}, function () {
-                                chrome.tabs.sendMessage(tab.id, {json: jsonInput});
-                            });
-                        });
+                        var port = chrome.extension.connect({name: 'djson'});
+                        port.postMessage({type: "OPEN JSON TAB", viewTabUrl: viewTabUrl, json: jsonInput});
                     }
                 });
             } catch (exc) {

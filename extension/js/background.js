@@ -129,11 +129,10 @@
     }
 
     // Record current version (in case future update wants to know)
-    localStorage.djsonVersion = '0.2.1';
+    localStorage.djsonVersion = '0.2.2';
 
     // Template elements
-    var templates,
-        baseSpan = document.createElement('span');
+    var baseSpan = document.createElement('span');
 
     function getSpanBoth(innerText, className) {
         var span = baseSpan.cloneNode(false);
@@ -283,7 +282,7 @@
                             count++;
                             childdObj = getdObjDOM(value[k], k);
                             // Add comma
-                            comma = templates.t_commaText.cloneNode();
+                            comma = templates.t_commaText.cloneNode(false);
                             childdObj.appendChild(comma);
                             blockInner.appendChild(childdObj);
                         }
@@ -314,7 +313,7 @@
                         childdObj = getdObjDOM(value[i], false);
                         // Add comma if not last one
                         if (i < lastIndex) {
-                            childdObj.appendChild(templates.t_commaText.cloneNode());
+                            childdObj.appendChild(templates.t_commaText.cloneNode(false));
                         }
                         // Append the child dObj
                         blockInner.appendChild(childdObj);
@@ -388,7 +387,19 @@
                 validJsonText
                 ;
 
-            if (msg.type === 'SENDING TEXT') {
+            if (msg.type === 'OPEN JSON TAB') {
+                chrome.tabs.query({active: true}, function (tabs) {
+                    var index = tabs[0].index;
+                    chrome.tabs.create({url: msg.viewTabUrl, active: true, index: index + 1}, function (tab) {
+                        chrome.tabs.executeScript(tab.id, {file: "js/content.js", runAt: "document_start"}, function () {
+                            chrome.tabs.sendMessage(tab.id, {json: msg.json});
+                        });
+                    });
+                });
+                port.disconnect();
+            }
+
+            else if (msg.type === 'SENDING TEXT') {
                 // Try to parse as JSON
                 var obj,
                     text = msg.text;
