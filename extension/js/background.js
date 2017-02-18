@@ -129,7 +129,7 @@
     }
 
     // Record current version (in case future update wants to know)
-    localStorage.djsonVersion = '0.2.2';
+    localStorage.djsonVersion = '0.2.3';
 
     // Template elements
     var baseSpan = document.createElement('span');
