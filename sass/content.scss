@@ -1,15 +1,30 @@
 @charset "utf-8";
 
+$color-background: white;
+$color-text: #444;
+$color-text-dark: #333;
+$color-key: black;
+$color-value: #0B7500;
+$color-url-hover: #050;
+$color-null: #1A01CC;
+
 body {
   -webkit-user-select: text;
   overflow-y: scroll !important;
   margin: 0;
   position: relative;
+  background-color: $color-background;
+
+  pre#emptyPre {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
 }
 
 pre {
   white-space: normal;
   font-size: 13px;
+  color: $color-text;
 }
 
 #optionBar {
@@ -18,6 +33,7 @@ pre {
   position: absolute;
   top: 9px;
   right: 17px;
+  z-index: 10;
 
   button {
     -webkit-border-radius: 2px;
@@ -25,14 +41,12 @@ pre {
     -webkit-user-select: none;
     background: -webkit-linear-gradient(#fafafa, #f4f4f4 40%, #e5e5e5);
     border: 1px solid #aaa;
-    color: #444;
+    color: $color-text;
     font-size: 12px;
     margin-bottom: 0;
     min-width: 4em;
-    /*padding: 3px 12px 3px 12px;*/
     padding: 3px 0;
     position: relative;
-    z-index: 10;
     display: inline-block;
     width: 80px;
     text-shadow: 1px 1px rgba(255, 255, 255, 0.3);
@@ -53,14 +67,14 @@ pre {
   #buttonPlain:active {
     -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
     background: #ebebeb -webkit-linear-gradient(#f4f4f4, #efefef 40%, #dcdcdc);
-    color: #333;
+    color: $color-text-dark;
   }
 
   #buttonFormatted.selected,
   #buttonPlain.selected {
     -webkit-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
     background: #ebebeb -webkit-linear-gradient(#e4e4e4, #dfdfdf 40%, #dcdcdc);
-    color: #333;
+    color: $color-text-dark;
   }
 
   #collapseAll {
@@ -69,6 +83,7 @@ pre {
 
   #buttonFormatted {
     margin-left: 0;
+    margin-right: 10px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
@@ -84,12 +99,79 @@ pre {
     display: none;
     margin-top: 15px;
   }
+
+  #themeChooser {
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    cursor: pointer;
+    background-image: url('data:image/png;base64,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');
+    background-size: cover;
+    position: relative;
+    top: 7px;
+  }
+
+  #themeChooserContainer {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 440px;
+    background: $color-background;
+    box-shadow: 1px 2px 9px 1px #888888;
+    padding: 10px;
+    box-sizing: border-box;
+
+    &:before {
+      width: 0;
+      height: 0;
+      border-left: 11px solid transparent;
+      border-right: 11px solid transparent;
+      border-bottom: 11px solid #888888;
+      opacity: 0.3;
+      position: absolute;
+      top: -11px;
+      right: 0.5px;
+      content: "";
+    }
+
+    &:after {
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid $color-background;
+      position: absolute;
+      top: -10px;
+      right: 1px;
+      content: "";
+    }
+
+    #themeChooserTitle {
+      font-weight: bold;
+      color: $color-text-dark;
+    }
+
+    #themeChooserSelectContainer {
+      margin-top: 10px;
+    }
+
+    #themeChooserPreview {
+      pre {
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        border: 1px solid;
+        padding: 5px;
+        box-shadow: inset 1px 1px 2px 0 #888888;
+      }
+    }
+  }
 }
 
 #jsonpOpener,
 #jsonpCloser {
   padding: 4px 0 0 8px;
-  color: black;
+  color: $color-text;
   margin-bottom: -6px;
 }
 
@@ -128,24 +210,22 @@ pre {
 }
 
 .expander {
-  width: 20px;
-  height: 18px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid $color-text;
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
   display: block;
   position: absolute;
-  left: -2px;
-  top: 1px;
+  left: 3px;
+  top: 5px;
   z-index: 5;
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAD1JREFUeNpiYGBgOADE%2F3Hgw0DM4IRHgSsDFOzFInmMAQnY49ONzZRjDFiADT7dMLALiE8y4AGW6LoBAgwAuIkf%2F%2FB7O9sAAAAASUVORK5CYII%3D") no-repeat center center;
   opacity: 0.15;
-  // -webkit-transition: -webkit-transform 0.05s linear ;
+  cursor: pointer;
+  -webkit-transition: -webkit-transform 0.1s linear ;
 
   .collapsed > & {
     -webkit-transform: rotate(-90deg);
-    width: 18px;
-    height: 20px;
-
-    left: 0;
-    top: 0;
   }
 
   &:hover {
@@ -171,12 +251,12 @@ pre {
 /* SYNTAX HIGHLIGHTING */
 
 #formattedJson, #jsonpOpener, #jsonpCloser {
-  color: #333;
+  color: $color-text-dark;
   font: 13px/18px monospace;
 }
 
 #formattedJson {
-  color: #444;
+  color: $color-text;
 }
 
 .b /* Bracket/brace */
@@ -185,7 +265,7 @@ pre {
 }
 
 .s {
-  color: #0B7500;
+  color: $color-value;
   word-wrap: break-word;
 }
 
@@ -196,23 +276,23 @@ a:link, a:visited {
 
 a:hover, a:active {
   text-decoration: underline;
-  color: #050;
+  color: $color-url-hover;
 }
 
 .bl, .nl, .n { /* bool, null, number */
   font-weight: bold;
-  color: #1A01CC;
+  color: $color-null;
 }
 
 .key { /* key */
-  color: black;
+  color: $color-key;
 }
 
 #formattingMsg {
   font: 13px "Lucida Grande", "Segoe UI", "Tahoma";
   padding: 10px 0 0 8px;
   margin: 0;
-  color: #333;
+  color: $color-text-dark;
 
   .loader {
     position: relative;
@@ -247,3 +327,10 @@ span {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+@import "theme-default";
+@import "theme-monokai";
+@import "theme-xcode";
+@import "theme-solarized";
+@import "theme-darkorange";
+@import "theme-halewa";

@@ -1,0 +1,39 @@
+$halewa-color-background: #263238;
+$halewa-color-text: #5ee38a;
+$halewa-color-text-dark: #60fc9f;
+$halewa-color-key: #c792ea;
+$halewa-color-value: #ffcb6b;
+$halewa-color-url: #50a3d8;
+$halewa-color-null: #6dc2b8;
+
+body[data-theme="halewa"], #themeChooserPreview[data-theme="halewa"] {
+  background-color: $halewa-color-background;
+  .expander {
+    border-top: 8px solid $halewa-color-text;
+  }
+  /* SYNTAX HIGHLIGHTING */
+  #formattedJson, #jsonpOpener, #jsonpCloser {
+    color: $halewa-color-text-dark;
+  }
+  #formattedJson {
+    color: $halewa-color-text;
+  }
+  .objProp {
+    color: $halewa-color-key;
+  }
+  .s {
+    color: $halewa-color-value;
+  }
+  .key {
+    color: $halewa-color-key;
+  }
+  pre {
+    color: $halewa-color-text;
+  }
+  a:hover, a:active {
+    color: $halewa-color-url;
+  }
+  .bl, .nl, .n {
+    color: $halewa-color-null;
+  }
+}

@@ -1,0 +1,39 @@
+$darkorange-color-background: black;
+$darkorange-color-text: #ededed;
+$darkorange-color-text-dark: white;
+$darkorange-color-key: orange;
+$darkorange-color-value: lightgreen;
+$darkorange-color-url: dodgerBlue;
+$darkorange-color-null: lightblue;
+
+body[data-theme="darkorange"], #themeChooserPreview[data-theme="darkorange"] {
+  background-color: $darkorange-color-background;
+  .expander {
+    border-top: 8px solid $darkorange-color-text;
+  }
+  /* SYNTAX HIGHLIGHTING */
+  #formattedJson, #jsonpOpener, #jsonpCloser {
+    color: $darkorange-color-text-dark;
+  }
+  #formattedJson {
+    color: $darkorange-color-text;
+  }
+  .objProp {
+    color: $darkorange-color-key;
+  }
+  .s {
+    color: $darkorange-color-value;
+  }
+  .key {
+    color: $darkorange-color-key;
+  }
+  pre {
+    color: $darkorange-color-text;
+  }
+  a:hover, a:active {
+    color: $darkorange-color-url;
+  }
+  .bl, .nl, .n {
+    color: $darkorange-color-null;
+  }
+}

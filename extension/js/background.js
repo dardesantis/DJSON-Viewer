@@ -1,5 +1,5 @@
 /** @license
- DJSON Viewer | MIT License
+ DJSON Viewer and Formatter | MIT License
  Copyright 2017 Dario De Santis
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -129,7 +129,7 @@
     }
 
     // Record current version (in case future update wants to know)
-    localStorage.djsonVersion = '0.2.5';
+    localStorage.djsonVersion = '0.3.0';
 
     // Template elements
     var baseSpan = document.createElement('span');

@@ -1,0 +1,39 @@
+$monokai-color-background: #272822;
+$monokai-color-text: #fffff9;
+$monokai-color-text-dark: #ffffff;
+$monokai-color-key: #F92672;
+$monokai-color-value: #a6e22e;
+$monokai-color-url: #8ac21b;
+$monokai-color-null: #AE81FF;
+
+body[data-theme="monokai"], #themeChooserPreview[data-theme="monokai"] {
+  background-color: $monokai-color-background;
+  .expander {
+    border-top: 8px solid $monokai-color-text;
+  }
+  /* SYNTAX HIGHLIGHTING */
+  #formattedJson, #jsonpOpener, #jsonpCloser {
+    color: $monokai-color-text-dark;
+  }
+  #formattedJson {
+    color: $monokai-color-text;
+  }
+  .objProp {
+    color: $monokai-color-key;
+  }
+  .s {
+    color: $monokai-color-value;
+  }
+  .key {
+    color: $monokai-color-key;
+  }
+  pre {
+    color: $monokai-color-text;
+  }
+  a:hover, a:active {
+    color: $monokai-color-url;
+  }
+  .bl, .nl, .n {
+    color: $monokai-color-null;
+  }
+}

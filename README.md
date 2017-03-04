@@ -1,6 +1,6 @@
 ![JSONViewer Logo](https://github.com/dardesantis/DJSON-Viewer/raw/master/extension/icons/128.png)
 
-DJSON Viewer
+DJSON Viewer and Formatter
 ==============
 
 Chrome extension for printing and formatting JSON and JSONP nicely when you visit it 'directly' in a browser tab.
@@ -9,8 +9,9 @@ Initial base of the formatter from: [callumlocke json-formatter](https://github.
 Features
 --------
 
-* Format JSON and JSONP responses
+* Format JSON and JSONP input or responses
 * Minify or Beautify JSON
+* Theme support
 * Syntax highlighting
 * Collapsible trees, with indent guides
 * Recursive collapsible elements
@@ -72,7 +73,7 @@ That would require manually parsing the JSON string with regular expressions (in
 
 LICENCE
 -------
-DJSON Viewer | MIT License
+DJSON Viewer and Formatter | MIT License
 Copyright 2017 Dario De Santis
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of

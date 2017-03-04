@@ -1,5 +1,5 @@
 /** @license
- DJSON Viewer | MIT License
+ DJSON Viewer and Formatter | MIT License
  Copyright 2017 Dario De Santis
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of

@@ -1,0 +1,39 @@
+$default-color-background: white;
+$default-color-text: #444;
+$default-color-text-dark: #333;
+$default-color-key: black;
+$default-color-value: #0B7500;
+$default-color-url: #050;
+$default-color-null: #1A01CC;
+
+body[data-theme="default"], #themeChooserPreview[data-theme="default"] {
+  background-color: $default-color-background;
+  .expander {
+    border-top: 8px solid $default-color-text;
+  }
+  /* SYNTAX HIGHLIGHTING */
+  #formattedJson, #jsonpOpener, #jsonpCloser {
+    color: $default-color-text-dark;
+  }
+  #formattedJson {
+    color: $default-color-text;
+  }
+  .objProp {
+    color: $default-color-key;
+  }
+  .s {
+    color: $default-color-value;
+  }
+  .key {
+    color: $default-color-key;
+  }
+  pre {
+    color: $default-color-text;
+  }
+  a:hover, a:active {
+    color: $default-color-url;
+  }
+  .bl, .nl, .n {
+    color: $default-color-null;
+  }
+}

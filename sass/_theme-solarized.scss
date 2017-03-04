@@ -1,0 +1,39 @@
+$solarized-color-background: #002b36;
+$solarized-color-text: #cfebee;
+$solarized-color-text-dark: #e2fafc;
+$solarized-color-key: #839496;
+$solarized-color-value: #2aa198;
+$solarized-color-url: #268bd2;
+$solarized-color-null: #d33682;
+
+body[data-theme="solarized"], #themeChooserPreview[data-theme="solarized"] {
+  background-color: $solarized-color-background;
+  .expander {
+    border-top: 8px solid $solarized-color-text;
+  }
+  /* SYNTAX HIGHLIGHTING */
+  #formattedJson, #jsonpOpener, #jsonpCloser {
+    color: $solarized-color-text-dark;
+  }
+  #formattedJson {
+    color: $solarized-color-text;
+  }
+  .objProp {
+    color: $solarized-color-key;
+  }
+  .s {
+    color: $solarized-color-value;
+  }
+  .key {
+    color: $solarized-color-key;
+  }
+  pre {
+    color: $solarized-color-text;
+  }
+  a:hover, a:active {
+    color: $solarized-color-url;
+  }
+  .bl, .nl, .n {
+    color: $solarized-color-null;
+  }
+}

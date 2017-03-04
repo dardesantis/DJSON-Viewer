@@ -1,0 +1,39 @@
+$xcode-color-background: white;
+$xcode-color-text: #bdaddd;
+$xcode-color-text-dark: #9589b0;
+$xcode-color-key: #a195ee;
+$xcode-color-value: #000000;
+$xcode-color-url: #f7104d;
+$xcode-color-null: #3b8afb;
+
+body[data-theme="xcode"], #themeChooserPreview[data-theme="xcode"] {
+  background-color: $xcode-color-background;
+  .expander {
+    border-top: 8px solid $xcode-color-text;
+  }
+  /* SYNTAX HIGHLIGHTING */
+  #formattedJson, #jsonpOpener, #jsonpCloser {
+    color: $xcode-color-text-dark;
+  }
+  #formattedJson {
+    color: $xcode-color-text;
+  }
+  .objProp {
+    color: $xcode-color-key;
+  }
+  .s {
+    color: $xcode-color-value;
+  }
+  .key {
+    color: $xcode-color-key;
+  }
+  pre {
+    color: $xcode-color-text;
+  }
+  a:hover, a:active {
+    color: $xcode-color-url;
+  }
+  .bl, .nl, .n {
+    color: $xcode-color-null;
+  }
+}
