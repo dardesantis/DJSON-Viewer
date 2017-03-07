@@ -36,4 +36,10 @@ body[data-theme="solarized"], #themeChooserPreview[data-theme="solarized"] {
   .bl, .nl, .n {
     color: $solarized-color-null;
   }
+
+  #status {
+    border-color: $solarized-color-text-dark;
+    background-color: $solarized-color-text;
+    color: $solarized-color-background;
+  }
 }

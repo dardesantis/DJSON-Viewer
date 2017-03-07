@@ -36,4 +36,10 @@ body[data-theme="monokai"], #themeChooserPreview[data-theme="monokai"] {
   .bl, .nl, .n {
     color: $monokai-color-null;
   }
+
+  #status {
+    border-color: $monokai-color-text-dark;
+    background-color: $monokai-color-text;
+    color: $monokai-color-background;
+  }
 }

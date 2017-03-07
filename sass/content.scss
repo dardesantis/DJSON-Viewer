@@ -308,6 +308,31 @@ a:hover, a:active {
   }
 }
 
+#status {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  min-width: 628px;
+  border: 1px solid $color-text-dark;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-right-radius: 4px;
+  height: 16px;
+  padding: 2px 7px 2px 4px;
+  font-size: 15px;
+  opacity: 0;
+  background-color: $color-text;
+  color: $color-background;
+  transition: opacity .2s ease-out;
+  -webkit-transition: opacity .2s ease-out;
+  user-select: none;
+  -webkit-user-select: none;
+
+  &:not(:empty) {
+    opacity: 1;
+  }
+}
+
 /* Misc */
 [hidden] {
   display: none !important;

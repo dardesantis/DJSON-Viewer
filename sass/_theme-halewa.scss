@@ -36,4 +36,10 @@ body[data-theme="halewa"], #themeChooserPreview[data-theme="halewa"] {
   .bl, .nl, .n {
     color: $halewa-color-null;
   }
+
+  #status {
+    border-color: $halewa-color-text-dark;
+    background-color: $halewa-color-text;
+    color: $halewa-color-background;
+  }
 }

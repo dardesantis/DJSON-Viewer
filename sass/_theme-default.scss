@@ -36,4 +36,10 @@ body[data-theme="default"], #themeChooserPreview[data-theme="default"] {
   .bl, .nl, .n {
     color: $default-color-null;
   }
+
+  #status {
+    border-color: $default-color-text-dark;
+    background-color: $default-color-text;
+    color: $default-color-background;
+  }
 }

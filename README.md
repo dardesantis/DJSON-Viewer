@@ -3,7 +3,7 @@
 DJSON Viewer and Formatter
 ==============
 
-Chrome extension for printing and formatting JSON and JSONP nicely when you visit it 'directly' in a browser tab.
+Chrome extension for printing and formatting JSON and JSONP nicely directly in a browser tab.
 Initial base of the formatter from: [callumlocke json-formatter](https://github.com/callumlocke/json-formatter)
 
 Features
@@ -21,6 +21,7 @@ Features
 * Works on local files too (if you enable this in `chrome://extensions`)
 * You can inspect the JSON by typing `djson` in the console
 * Counts items and properties in a collection
+* Show JSON path of the elements on hover
 
 A background worker is used to prevent the UI freezing when processing very long JSON pages.
 
@@ -32,7 +33,7 @@ Installation
 [![https://chrome.google.com/webstore/detail/djson-viewer/chaeijjekipecdajnijdldjjipaegdjc](https://github.com/dardesantis/DJSON-Viewer/raw/master/chromestore.png)](https://chrome.google.com/webstore/detail/djson-viewer/chaeijjekipecdajnijdldjjipaegdjc)
 
 **Option 2** – install it using the packed version:
-* clone/download this repo or just download the file djson-viewer.crx,
+* clone/download this repo or just [download](https://github.com/dardesantis/DJSON-Viewer/raw/master/djson-viewer.crx) the file `djson-viewer.crx`,
 * open Chrome and go to `chrome://chrome/extensions/`,
 * drag the `djson-viewer.crx` into Chrome
 * accept to install the extension

@@ -36,4 +36,10 @@ body[data-theme="darkorange"], #themeChooserPreview[data-theme="darkorange"] {
   .bl, .nl, .n {
     color: $darkorange-color-null;
   }
+
+  #status {
+    border-color: $darkorange-color-text-dark;
+    background-color: $darkorange-color-text;
+    color: $darkorange-color-background;
+  }
 }

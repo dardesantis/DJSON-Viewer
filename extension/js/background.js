@@ -26,6 +26,8 @@
 
     "use strict";
 
+    var path, copyPathMenuEntryId;
+
     // Constants
     var
         TYPE_STRING = 1,
@@ -127,9 +129,6 @@
         }
         return idx;
     }
-
-    // Record current version (in case future update wants to know)
-    localStorage.djsonVersion = '0.3.0';
 
     // Template elements
     var baseSpan = document.createElement('span');
@@ -374,6 +373,20 @@
         return returnHTML;
     }
 
+    function copy(value) {
+        var selElement, selRange, selection;
+        selElement = document.createElement("span");
+        selRange = document.createRange();
+        selElement.innerText = value;
+        document.body.appendChild(selElement);
+        selRange.selectNodeContents(selElement);
+        selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(selRange);
+        document.execCommand("Copy");
+        document.body.removeChild(selElement);
+    }
+
     // Listen for requests from content pages wanting to set up a port
     chrome.extension.onConnect.addListener(function (port) {
 
@@ -478,16 +491,47 @@
                 }
 
                 // And send it the message to confirm that we're now formatting (so it can show a spinner)
-                port.postMessage(['FORMATTING' /*, JSON.stringify(localStorage)*/]);
+                port.postMessage(['FORMATTING', JSON.stringify(localStorage)]);
 
                 // Do formatting
                 var html = jsonObjToHTML(obj, jsonpFunctionName);
 
                 // Post the HTML string to the content script
                 port.postMessage(['FORMATTED', html, validJsonText]);
+            }
 
-                // Disconnect
-                port.disconnect();
+            else if (msg.type === 'SAVE THEME') {
+                localStorage.setItem("theme", msg.theme);
+            }
+
+            else if (msg.type === 'COPY PATH') {
+                chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
+                    function updateContextMenu() {
+                        path = msg.path;
+                        if (typeof copyPathMenuEntryId === "undefined" || copyPathMenuEntryId == null) {
+                            copyPathMenuEntryId = chrome.contextMenus.create({
+                                                                                 title : "Copy JSON Path",
+                                                                                 contexts : [ "page", "selection", "link" ],
+                                                                                 onclick : function(info, tab) {
+                                                                                     copy(path);
+                                                                                 }
+                                                                             });
+                        } else if (copyPathMenuEntryId && path.length == 0) {
+                            chrome.contextMenus.remove(copyPathMenuEntryId);
+                            copyPathMenuEntryId = null;
+                        }
+                    }
+                    if (result) {
+                        updateContextMenu();
+                    } else {
+                        chrome.permissions.request({permissions: ['contextMenus']}, function(granted) {
+                            // The callback argument will be true if the user granted the permissions.
+                            if (granted) {
+                                updateContextMenu();
+                            }
+                        });
+                    }
+                });
             }
         });
     });
