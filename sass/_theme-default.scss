@@ -37,6 +37,10 @@ body[data-theme="default"], #themeChooserPreview[data-theme="default"] {
     color: $default-color-null;
   }
 
+  #formattingMsg {
+    color: $default-color-text-dark;
+  }
+
   #status {
     border-color: $default-color-text-dark;
     background-color: $default-color-text;

@@ -37,6 +37,10 @@ body[data-theme="monokai"], #themeChooserPreview[data-theme="monokai"] {
     color: $monokai-color-null;
   }
 
+  #formattingMsg {
+    color: $monokai-color-text-dark;
+  }
+
   #status {
     border-color: $monokai-color-text-dark;
     background-color: $monokai-color-text;

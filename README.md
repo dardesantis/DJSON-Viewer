@@ -21,7 +21,8 @@ Features
 * Works on local files too (if you enable this in `chrome://extensions`)
 * You can inspect the JSON by typing `djson` in the console
 * Counts items and properties in a collection
-* Show JSON path of the elements on hover
+* Show JSON path of the elements on hover and copy it with the context menu
+* Option to start with JSON collapsed
 
 A background worker is used to prevent the UI freezing when processing very long JSON pages.
 

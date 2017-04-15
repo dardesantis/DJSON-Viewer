@@ -37,6 +37,10 @@ body[data-theme="darkorange"], #themeChooserPreview[data-theme="darkorange"] {
     color: $darkorange-color-null;
   }
 
+  #formattingMsg {
+    color: $darkorange-color-text-dark;
+  }
+
   #status {
     border-color: $darkorange-color-text-dark;
     background-color: $darkorange-color-text;

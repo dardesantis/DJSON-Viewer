@@ -37,6 +37,10 @@ body[data-theme="solarized"], #themeChooserPreview[data-theme="solarized"] {
     color: $solarized-color-null;
   }
 
+  #formattingMsg {
+    color: $solarized-color-text-dark;
+  }
+
   #status {
     border-color: $solarized-color-text-dark;
     background-color: $solarized-color-text;

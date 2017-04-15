@@ -37,6 +37,10 @@ body[data-theme="xcode"], #themeChooserPreview[data-theme="xcode"] {
     color: $xcode-color-null;
   }
 
+  #formattingMsg {
+    color: $xcode-color-text-dark;
+  }
+
   #status {
     border-color: $xcode-color-text-dark;
     background-color: $xcode-color-text;

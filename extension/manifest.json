@@ -1,7 +1,7 @@
 {
-  "name": "DJSON Viewer and Formatter. JSON",
+  "name": "DJSON. JSON Viewer & Formatter",
   "short_name": "DJSON Viewer",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "manifest_version": 2,
   "description": "Extension to format and view JSON, from Web, Input or File.",
   "homepage_url": "https://github.com/dardesantis/DJSON-Viewer",
@@ -26,5 +26,6 @@
   "content_scripts": [
     { "matches": ["<all_urls>"], "js": ["js/content.js"], "run_at": "document_start" }
   ],
-  "permissions":["<all_urls>", "clipboardWrite", "tabs"]
+  "permissions":["<all_urls>", "clipboardWrite", "tabs"],
+  "optional_permissions": ["contextMenus"]
 }

@@ -26,7 +26,7 @@
 
     "use strict";
 
-    var path, copyPathMenuEntryId;
+    var path;
 
     // Constants
     var
@@ -374,17 +374,35 @@
     }
 
     function copy(value) {
-        var selElement, selRange, selection;
-        selElement = document.createElement("span");
-        selRange = document.createRange();
-        selElement.innerText = value;
-        document.body.appendChild(selElement);
-        selRange.selectNodeContents(selElement);
-        selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(selRange);
-        document.execCommand("Copy");
-        document.body.removeChild(selElement);
+        if(value.length > 0){
+            var selElement, selRange, selection;
+            selElement = document.createElement("span");
+            selRange = document.createRange();
+            selElement.innerText = value;
+            document.body.appendChild(selElement);
+            selRange.selectNodeContents(selElement);
+            selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(selRange);
+            document.execCommand("Copy");
+            document.body.removeChild(selElement);
+        }
+    }
+
+    function createContextMenu() {
+        chrome.contextMenus.create({
+            title : "Copy JSON Path",
+            id: "copyJSONPath",
+            contexts : [ "page", "selection", "link" ],
+            onclick : function(info, tab) {
+                copy(path);
+            }
+        }, function(){
+            var err = chrome.runtime.lastError;
+            if(err && err.hasOwnProperty('message') && err.message.indexOf('Cannot create item with duplicate id') === -1) {
+                console.warn('Context menu error ignored:', err);
+            }
+        });
     }
 
     // Listen for requests from content pages wanting to set up a port
@@ -409,7 +427,21 @@
                         });
                     });
                 });
-                port.disconnect();
+            }
+
+            else if (msg.type === 'OPEN OPTION TAB') {
+                var viewTabUrl = chrome.extension.getURL('options.html');
+                chrome.tabs.query({url: viewTabUrl, currentWindow: true}, function (tabs) {
+                    var tabLenght = tabs.length;
+                    if (tabLenght > 0) {
+                        chrome.tabs.update(tabs[0].id, {'active': true});
+                    } else {
+                        chrome.tabs.query({active: true}, function (tabs) {
+                            var index = tabs[0].index;
+                            chrome.tabs.create({url: viewTabUrl, active: true, index: index + 1});
+                        });
+                    }
+                });
             }
 
             else if (msg.type === 'SENDING TEXT') {
@@ -497,42 +529,60 @@
                 var html = jsonObjToHTML(obj, jsonpFunctionName);
 
                 // Post the HTML string to the content script
-                port.postMessage(['FORMATTED', html, validJsonText]);
-            }
-
-            else if (msg.type === 'SAVE THEME') {
-                localStorage.setItem("theme", msg.theme);
+                port.postMessage(['FORMATTED', html, validJsonText, JSON.stringify(localStorage)]);
             }
 
             else if (msg.type === 'COPY PATH') {
-                chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
-                    function updateContextMenu() {
-                        path = msg.path;
-                        if (typeof copyPathMenuEntryId === "undefined" || copyPathMenuEntryId == null) {
-                            copyPathMenuEntryId = chrome.contextMenus.create({
-                                                                                 title : "Copy JSON Path",
-                                                                                 contexts : [ "page", "selection", "link" ],
-                                                                                 onclick : function(info, tab) {
-                                                                                     copy(path);
-                                                                                 }
-                                                                             });
-                        } else if (copyPathMenuEntryId && path.length == 0) {
-                            chrome.contextMenus.remove(copyPathMenuEntryId);
-                            copyPathMenuEntryId = null;
+                var contextMenu = localStorage.getItem("contextMenu");
+                if(contextMenu && contextMenu === "true") {
+                    chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
+                        if (result) {
+                            path = msg.path;
+                        } else {
+                            localStorage.removeItem("contextMenu");
                         }
-                    }
+                    });
+                }
+            }
+
+            else if (msg.type === 'ENABLE CONTEXT MENU') {
+                chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
                     if (result) {
-                        updateContextMenu();
+                        localStorage.setItem("contextMenu", true);
+                        createContextMenu();
                     } else {
                         chrome.permissions.request({permissions: ['contextMenus']}, function(granted) {
                             // The callback argument will be true if the user granted the permissions.
                             if (granted) {
-                                updateContextMenu();
+                                localStorage.setItem("contextMenu", true);
+                                createContextMenu();
+                            } else {
+                                var contextMenuCheckbox = document.getElementById("contextMenuCheckbox");
+                                if(contextMenuCheckbox) {
+                                    contextMenuCheckbox.checked = false;
+                                }
+                                localStorage.removeItem("contextMenu");
                             }
                         });
                     }
                 });
             }
+
+            else if (msg.type === 'DISABLE CONTEXT MENU') {
+                localStorage.removeItem("contextMenu");
+                chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
+                    chrome.contextMenus.removeAll();
+                });
+            }
         });
     });
+
+    var contextMenu = localStorage.getItem("contextMenu");
+    if(contextMenu && contextMenu === "true") {
+        chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
+            if (result) {
+                createContextMenu();
+            }
+        });
+    }
 }());
