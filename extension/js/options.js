@@ -48,22 +48,6 @@
         localStorage.setItem("theme", selectedTheme);
     });
 
-
-    // context menu
-    var contextMenuCheckbox = document.getElementById("contextMenuCheckbox");
-    var contextMenu = localStorage.getItem("contextMenu");
-    if(contextMenu && contextMenu === "true"){
-        contextMenuCheckbox.checked = true;
-    }
-    contextMenuCheckbox.addEventListener('click', function () {
-        var port = chrome.extension.connect({name: 'djson'});
-        if(contextMenuCheckbox.checked) {
-            port.postMessage({type: "ENABLE CONTEXT MENU"});
-        } else {
-            port.postMessage({type: "DISABLE CONTEXT MENU"});
-        }
-    });
-
     // start JSON collapsed
     var startCollapsedCheckbox = document.getElementById("startCollapsedCheckbox");
     var startCollapsed = localStorage.getItem("startCollapsed");

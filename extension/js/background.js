@@ -26,7 +26,71 @@
 
     "use strict";
 
-    var path;
+    var obj, path,
+        fns = {
+            copyPath: function () {
+                copy(path)
+            },
+            copyValue: function() {
+                if(path && path.length > 1 && obj) {
+                    var prop = path.substring(1);
+                    if(path.charAt(1) === "."){
+                        prop = prop.substring(1);
+                    }
+                    var result = Object.byString(obj, prop);
+                    if(typeof result === "object"){
+                        result = JSON.stringify(Object.byString(obj, prop));
+                    }
+                    copy(result);
+                }
+            },
+            copyKey: function () {
+                if(path && path.length > 1) {
+                    if(path.slice(-1) === "]") {
+                        path = path.replace(/\[\d\]$/, '');
+                    }
+                    if(path.length > 1) {
+                        copy(path.substring(path.lastIndexOf(".") + 1));
+                    }
+                }
+            },
+            _viewJSON: function (info, stripSlashes) {
+                if(typeof info.selectionText === "undefined") return;
+                var str = info.selectionText;
+                if(!str || str.length == 0) return;
+                try {
+                    if(stripSlashes) {
+                        str = str.replace(/\\(.)/mg, "$1");
+                    }
+                    if( typeof JSON.parse(str) === "undefined" ) return;
+                    var viewTabUrl = chrome.extension.getURL('json.html');
+                    chrome.tabs.query({url: viewTabUrl, currentWindow: true}, function (tabs) {
+                        var tabLenght = tabs.length;
+                        if (tabLenght > 0) {
+                            var tabIdToSend = null;
+                            for(var j=0; j<tabLenght; j++){
+                                if(tabs[j].active){
+                                    tabIdToSend = tabs[j].id;
+                                    break;
+                                }
+                            }
+                            tabIdToSend = tabIdToSend !== null ? tabIdToSend : tabs[0].id;
+                            chrome.tabs.update(tabIdToSend, {'active': true}, function (tab) {
+                                chrome.tabs.sendMessage(tab.id, {json: str});
+                            });
+                        } else {
+                            openJsonTab(viewTabUrl, str);
+                        }
+                    });
+                } catch (e) {}
+            },
+            viewJSON: function (info) {
+                this._viewJSON(info, false);
+            },
+            viewStripedJSON: function (info) {
+                this._viewJSON(info, true);
+            }
+        };
 
     // Constants
     var
@@ -374,7 +438,7 @@
     }
 
     function copy(value) {
-        if(value.length > 0){
+        if(value && (typeof value === "number" || value.length > 0)){
             var selElement, selRange, selection;
             selElement = document.createElement("span");
             selRange = document.createRange();
@@ -390,18 +454,67 @@
     }
 
     function createContextMenu() {
-        chrome.contextMenus.create({
-            title : "Copy JSON Path",
-            id: "copyJSONPath",
-            contexts : [ "page", "selection", "link" ],
-            onclick : function(info, tab) {
-                copy(path);
-            }
-        }, function(){
+        var swallowErorrs = function(){
             var err = chrome.runtime.lastError;
             if(err && err.hasOwnProperty('message') && err.message.indexOf('Cannot create item with duplicate id') === -1) {
                 console.warn('Context menu error ignored:', err);
             }
+        };
+
+        chrome.contextMenus.create({
+            title : "DJSON",
+            id: "djson",
+            contexts : [ "page", "selection", "link" ]
+        }, swallowErorrs);
+
+        chrome.contextMenus.create({
+            title : "Copy Value",
+            id: "copyValue",
+            parentId: "djson",
+            contexts : [ "page", "selection", "link" ]
+        }, swallowErorrs);
+
+        chrome.contextMenus.create({
+            title : "Copy Key",
+            id: "copyKey",
+            parentId: "djson",
+            contexts : [ "page", "selection", "link" ]
+        }, swallowErorrs);
+
+        chrome.contextMenus.create({
+            title : "Copy Path",
+            id: "copyPath",
+            parentId: "djson",
+            contexts : [ "page", "selection", "link" ]
+        }, swallowErorrs);
+
+        chrome.contextMenus.create({
+            title : "View JSON",
+            id: "viewJSON",
+            parentId: "djson",
+            contexts : [ "selection" ]
+        }, swallowErorrs);
+
+        chrome.contextMenus.create({
+            title : "View JSON (Strip slashes)",
+            id: "viewStripedJSON",
+            parentId: "djson",
+            contexts : [ "selection" ]
+        }, swallowErorrs);
+    }
+
+    chrome.contextMenus.onClicked.addListener(function(info, tab) {
+        fns[info.menuItemId](info);
+    });
+
+    function openJsonTab(tabUrl, json) {
+        chrome.tabs.query({active: true}, function (tabs) {
+            var index = tabs[0].index;
+            chrome.tabs.create({url: tabUrl, active: true, index: index + 1}, function (tab) {
+                chrome.tabs.executeScript(tab.id, {file: "js/content.js", runAt: "document_start"}, function () {
+                    chrome.tabs.sendMessage(tab.id, {json: json});
+                });
+            });
         });
     }
 
@@ -419,14 +532,7 @@
                 ;
 
             if (msg.type === 'OPEN JSON TAB') {
-                chrome.tabs.query({active: true}, function (tabs) {
-                    var index = tabs[0].index;
-                    chrome.tabs.create({url: msg.viewTabUrl, active: true, index: index + 1}, function (tab) {
-                        chrome.tabs.executeScript(tab.id, {file: "js/content.js", runAt: "document_start"}, function () {
-                            chrome.tabs.sendMessage(tab.id, {json: msg.json});
-                        });
-                    });
-                });
+                openJsonTab(msg.viewTabUrl, msg.json);
             }
 
             else if (msg.type === 'OPEN OPTION TAB') {
@@ -446,8 +552,7 @@
 
             else if (msg.type === 'SENDING TEXT') {
                 // Try to parse as JSON
-                var obj,
-                    text = msg.text;
+                var text = msg.text;
 
                 // Strip any leading garbage, such as a 'while(1);'
                 var strippedText = text.substring(firstJSONCharIndex(text));
@@ -533,56 +638,25 @@
             }
 
             else if (msg.type === 'COPY PATH') {
-                var contextMenu = localStorage.getItem("contextMenu");
-                if(contextMenu && contextMenu === "true") {
-                    chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
-                        if (result) {
-                            path = msg.path;
-                        } else {
-                            localStorage.removeItem("contextMenu");
-                        }
-                    });
-                }
-            }
-
-            else if (msg.type === 'ENABLE CONTEXT MENU') {
-                chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
-                    if (result) {
-                        localStorage.setItem("contextMenu", true);
-                        createContextMenu();
-                    } else {
-                        chrome.permissions.request({permissions: ['contextMenus']}, function(granted) {
-                            // The callback argument will be true if the user granted the permissions.
-                            if (granted) {
-                                localStorage.setItem("contextMenu", true);
-                                createContextMenu();
-                            } else {
-                                var contextMenuCheckbox = document.getElementById("contextMenuCheckbox");
-                                if(contextMenuCheckbox) {
-                                    contextMenuCheckbox.checked = false;
-                                }
-                                localStorage.removeItem("contextMenu");
-                            }
-                        });
-                    }
-                });
-            }
-
-            else if (msg.type === 'DISABLE CONTEXT MENU') {
-                localStorage.removeItem("contextMenu");
-                chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
-                    chrome.contextMenus.removeAll();
-                });
+                path = msg.path;
             }
         });
     });
 
-    var contextMenu = localStorage.getItem("contextMenu");
-    if(contextMenu && contextMenu === "true") {
-        chrome.permissions.contains({permissions: ['contextMenus']}, function(result) {
-            if (result) {
-                createContextMenu();
+    createContextMenu();
+
+    Object.byString = function(o, s) {
+        s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+        s = s.replace(/^\./, '');           // strip a leading dot
+        var a = s.split('.');
+        for (var i = 0, n = a.length; i < n; ++i) {
+            var k = a[i];
+            if (k in o) {
+                o = o[k];
+            } else {
+                return;
             }
-        });
+        }
+        return o;
     }
 }());
