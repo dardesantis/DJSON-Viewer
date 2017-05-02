@@ -48,18 +48,26 @@
         localStorage.setItem("theme", selectedTheme);
     });
 
-    // start JSON collapsed
-    var startCollapsedCheckbox = document.getElementById("startCollapsedCheckbox");
-    var startCollapsed = localStorage.getItem("startCollapsed");
-    if(startCollapsed && startCollapsed === "true"){
-        startCollapsedCheckbox.checked = true;
-    }
-    startCollapsedCheckbox.addEventListener('click', function () {
-        if(startCollapsedCheckbox.checked) {
-            localStorage.setItem("startCollapsed", true);
-        } else {
-            localStorage.removeItem("startCollapsed")
+    function optionInit(checkBoxId) {
+        var checkbox = document.getElementById(checkBoxId);
+        var localStoreItemName = checkBoxId.replace("Checkbox", "");
+        var localStorageItem = localStorage.getItem(localStoreItemName);
+        if(localStorageItem && localStorageItem === "true"){
+            checkbox.checked = true;
         }
-    });
+        checkbox.addEventListener('click', function () {
+            if(checkbox.checked) {
+                localStorage.setItem(localStoreItemName, true);
+            } else {
+                localStorage.removeItem(localStoreItemName)
+            }
+        });
+    }
+
+    // start JSON collapsed
+    optionInit("startCollapsedCheckbox");
+
+    // show always count of children
+    optionInit("showAlwaysCountCheckbox");
 
 })();

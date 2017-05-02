@@ -6,13 +6,12 @@
     <link rel="stylesheet" href="css/content.css">
 </head>
 <body id="optionScreen">
-<h1>Options</h1>
+<h1 style="display: inline-block">Options</h1> (The changes will be applied only after the reload of the json)
 <hr>
 <h2>Theme</h2>
 <div id="themeChooserContainer">
     <div id="themeChooserSelectContainer">
         <select></select>
-        (It will be applied only after the reload of the json)
     </div>
     <div id="themeChooserPreview">
         <pre><span class="b">{</span><br>    "<span class="key">number</span>": <span class="n">0.4</span>,<br>    "<span class="key">string</span>": <span class="s">"DJSON"</span>,<br>    "<span class="key">url</span>": <span class="a">"https://github.com/dardesantis/DJSON-Viewer"</span><br><span class="b">}</span></pre>
@@ -20,7 +19,9 @@
 </div>
 
 <h2>Preferences</h2>
-<input id="startCollapsedCheckbox" type="checkbox" name="collapsed"> Format JSON as collapsed (slightly slower)
+<input id="startCollapsedCheckbox" type="checkbox" name="collapsed"> Format JSON as collapsed
+<br>
+<input id="showAlwaysCountCheckbox" type="checkbox" name="collapsed"> Show always the numbers of items in Objects and Arrays (not only when collapsed)
 
 <script type="application/javascript" src="js/options.js"></script>
 </body>

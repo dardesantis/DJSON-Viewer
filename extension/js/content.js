@@ -242,21 +242,30 @@
                     break;
 
                 case 'FORMATTED' :
-                    // Insert HTML content
+
                     var localStorageOptions = JSON.parse(msg[3]);
-                    if( localStorageOptions && localStorageOptions.hasOwnProperty("startCollapsed")) {
-                        var template = document.createElement('template');
-                        template.innerHTML = msg[1];
-                        var jsonFormatted = template.content.firstChild;
-                        var expanders = jsonFormatted.getElementsByClassName('expander');
-                        if(expanders.length > 0) {
-                            collapse([jsonFormatted.getElementsByClassName('expander')[0].parentNode], true);
+
+                    // Insert CSS numOfChildren elements
+                    var numOfChildren = JSON.parse(msg[4]);
+                    for(var z=0; z<numOfChildren.length; z++){
+                        var count = numOfChildren[z];
+                        var comment = count + (count === 1 ? ' item' : ' items');
+                        // Add CSS that targets it
+                        djsonStyleEl.insertAdjacentHTML(
+                            'beforeend',
+                            '\n.numChild' + count + '.collapsed:after{color: #aaa; content:" // ' + comment + '"}'
+                        );
+
+                        if(localStorageOptions.hasOwnProperty("showAlwaysCount")) {
+                            djsonStyleEl.insertAdjacentHTML(
+                                'beforeend',
+                                '\n.numChild' + count + ':not(.collapsed)>.b:not(.lastB):after{color: #aaa; font-weight: normal; content:" // ' + comment + '"}'
+                            );
                         }
-                        djsonContent.innerHTML = '';
-                        djsonContent.appendChild(jsonFormatted);
-                    } else {
-                        djsonContent.innerHTML = msg[1];
                     }
+
+                    // Insert HTML content
+                    djsonContent.innerHTML = msg[1];
 
                     djsonContent.removeEventListener('mouseover', onMouseMove, false);
                     djsonContent.addEventListener('mouseover', onMouseMove, false);
@@ -408,44 +417,12 @@
         return blockInner;
     }
 
-    var lastdObjIdGiven = 0;
-
     function collapse(elements, recursive) {
-        //console.log('elements', elements) ;
-
-        var el, i, blockInner, count;
-
-        for (i = elements.length - 1; i >= 0; i--) {
-            el = elements[i];
-            el.classList.add('collapsed');
-
-            if (recursive || !el.id) {
-                blockInner = findBlockInner(el);
-
-                if (!blockInner) {
-                    continue;
-                }
-
-                // (CSS hides the contents and shows an ellipsis.)
-
-                // Add a count of the number of child properties/items (if not already done for this item)
-                if (!el.id) {
-                    el.id = 'dObj' + (++lastdObjIdGiven);
-
-                    // See how many children in the blockInner
-                    count = blockInner.children.length;
-
-                    // Generate comment text eg "4 items"
-                    var comment = count + (count === 1 ? ' item' : ' items');
-                    // Add CSS that targets it
-                    djsonStyleEl.insertAdjacentHTML(
-                        'beforeend',
-                        '\n#dObj' + lastdObjIdGiven + '.collapsed:after{color: #aaa; content:" // '
-                        + comment + '"}'
-                    );
-                }
-
-                if (recursive) {
+        for (var i = elements.length - 1; i >= 0; i--) {
+            elements[i].classList.add('collapsed');
+            if (recursive) {
+                var blockInner = findBlockInner(elements[i]);
+                if (blockInner) {
                     collapse(blockInner.children, recursive);
                 }
             }

@@ -26,7 +26,9 @@
 
     "use strict";
 
-    var obj, path,
+    var obj,
+        path,
+        numChildClasses,
         fns = {
             copyPath: function () {
                 copy(path)
@@ -223,9 +225,9 @@
         t_false: getSpanBoth('false', 'bl'),
 
         t_oBrace: getSpanBoth('{', 'b'),
-        t_cBrace: getSpanBoth('}', 'b'),
+        t_cBrace: getSpanBoth('}', 'b lastB'),
         t_oBracket: getSpanBoth('[', 'b'),
-        t_cBracket: getSpanBoth(']', 'b'),
+        t_cBracket: getSpanBoth(']', 'b lastB'),
 
         t_ellipsis: getSpanClass('ellipsis'),
         t_blockInner: getSpanClass('blockInner'),
@@ -236,14 +238,15 @@
     };
 
     // Core recursive DOM-building function
-    function getdObjDOM(value, keyName) {
+    function getdObjDOM(value, keyName, startCollapsed) {
         var type,
             dObj,
             nonZeroSize,
             templates = templatesObj, // bring into scope for tiny speed boost
             objKey,
             keySpan,
-            valueElement
+            valueElement,
+            dObjChildLength = 0
             ;
 
         // Establish value type
@@ -343,13 +346,14 @@
                     for (k in value) {
                         if (value.hasOwnProperty(k)) {
                             count++;
-                            childdObj = getdObjDOM(value[k], k);
+                            childdObj = getdObjDOM(value[k], k, startCollapsed);
                             // Add comma
                             comma = templates.t_commaText.cloneNode(false);
                             childdObj.appendChild(comma);
                             blockInner.appendChild(childdObj);
                         }
                     }
+                    dObjChildLength = count;
                     // Now remove the last comma
                     childdObj.removeChild(comma);
                     // Add blockInner
@@ -370,10 +374,11 @@
                     // Create blockInner (which indents) (don't attach yet)
                     blockInner = templates.t_blockInner.cloneNode(false);
                     // For each key/value pair, add the markup
-                    for (var i = 0, length = value.length, lastIndex = length - 1; i < length;
+                    dObjChildLength = value.length;
+                    for (var i = 0, lastIndex = dObjChildLength - 1; i < dObjChildLength;
                          i++) {
                         // Make a new dObj, with no key
-                        childdObj = getdObjDOM(value[i], false);
+                        childdObj = getdObjDOM(value[i], false, startCollapsed);
                         // Add comma if not last one
                         if (i < lastIndex) {
                             childdObj.appendChild(templates.t_commaText.cloneNode(false));
@@ -401,16 +406,25 @@
                 break;
         }
 
+        if (dObjChildLength > 0) {
+            if(typeof startCollapsed !== "undefined" && startCollapsed != null) {
+                dObj.classList.add('collapsed');
+            }
+            dObj.classList.add('numChild' + dObjChildLength);
+            numChildClasses[dObjChildLength] = 1;
+        }
+
         return dObj;
     }
 
     // Function to convert object to an HTML string
-    function jsonObjToHTML(obj, jsonpFunctionName) {
+    function jsonObjToHTML(obj, jsonpFunctionName, startCollapsed) {
 
-        // spin(5) ;
+        // reset number of children
+        numChildClasses = {};
 
         // Format object (using recursive dObj builder)
-        var rootDObj = getdObjDOM(obj, false);
+        var rootDObj = getdObjDOM(obj, false, startCollapsed);
 
         // The whole DOM is now built.
 
@@ -621,7 +635,7 @@
                 // If still running, we now have obj, which is valid JSON.
 
                 // Ensure it's not a number or string (technically valid JSON, but no point prettifying it)
-                if (typeof obj !== 'object' && typeof obj !== 'array') {
+                if (typeof obj !== 'object') {
                     port.postMessage(['NOT JSON', 'technically JSON but not an object or array']);
                     port.disconnect();
                     return;
@@ -631,16 +645,23 @@
                 port.postMessage(['FORMATTING', JSON.stringify(localStorage)]);
 
                 // Do formatting
-                var html = jsonObjToHTML(obj, jsonpFunctionName);
+                var html = jsonObjToHTML(obj, jsonpFunctionName, localStorage.getItem('startCollapsed'));
 
                 // Post the HTML string to the content script
-                port.postMessage(['FORMATTED', html, validJsonText, JSON.stringify(localStorage)]);
+                port.postMessage(['FORMATTED', html, validJsonText, JSON.stringify(localStorage), JSON.stringify(Object.keys(numChildClasses))]);
             }
 
             else if (msg.type === 'COPY PATH') {
                 path = msg.path;
             }
         });
+    });
+
+    // on app update show change log
+    chrome.runtime.onInstalled.addListener(function(details) {
+        if(details.reason == "update") {
+            chrome.tabs.create({url: chrome.extension.getURL('changelog.html'), active: true});
+        }
     });
 
     createContextMenu();
