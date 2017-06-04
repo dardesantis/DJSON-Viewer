@@ -36,6 +36,10 @@ body[data-theme="darkorange"], #themeChooserPreview[data-theme="darkorange"] {
   .bl, .nl, .n {
     color: $darkorange-color-null;
   }
+  .nested:after {
+    background-color: $darkorange-color-null;
+    color: $darkorange-color-background;
+  }
 
   #formattingMsg {
     color: $darkorange-color-text-dark;

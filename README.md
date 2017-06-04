@@ -23,6 +23,7 @@ Features
 * Counts items and properties in a collection
 * Show JSON path of the elements on hover and copy it with the context menu
 * Option to start with JSON collapsed
+* Recognize nested JSON strings in properties value
 
 A background worker is used to prevent the UI freezing when processing very long JSON pages.
 

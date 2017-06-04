@@ -252,6 +252,16 @@ a:hover, a:active {
   color: $color-key;
 }
 
+.nested:after {
+  content: "view nested JSON";
+  background-color: $color-null;
+  color: $color-background;
+  border-radius: 4px;
+  padding: 2px 5px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
 #formattingMsg {
   font: 13px "Lucida Grande", "Segoe UI", "Tahoma";
   padding: 10px 0 0 8px;

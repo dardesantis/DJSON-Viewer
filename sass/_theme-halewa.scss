@@ -36,6 +36,10 @@ body[data-theme="halewa"], #themeChooserPreview[data-theme="halewa"] {
   .bl, .nl, .n {
     color: $halewa-color-null;
   }
+  .nested:after {
+    background-color: $halewa-color-null;
+    color: $halewa-color-background;
+  }
 
   #formattingMsg {
     color: $halewa-color-text-dark;

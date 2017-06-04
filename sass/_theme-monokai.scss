@@ -36,6 +36,10 @@ body[data-theme="monokai"], #themeChooserPreview[data-theme="monokai"] {
   .bl, .nl, .n {
     color: $monokai-color-null;
   }
+  .nested:after {
+    background-color: $monokai-color-null;
+    color: $monokai-color-background;
+  }
 
   #formattingMsg {
     color: $monokai-color-text-dark;

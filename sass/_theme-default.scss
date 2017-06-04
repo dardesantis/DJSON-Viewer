@@ -36,6 +36,10 @@ body[data-theme="default"], #themeChooserPreview[data-theme="default"] {
   .bl, .nl, .n {
     color: $default-color-null;
   }
+  .nested:after {
+    background-color: $default-color-null;
+    color: $default-color-background;
+  }
 
   #formattingMsg {
     color: $default-color-text-dark;

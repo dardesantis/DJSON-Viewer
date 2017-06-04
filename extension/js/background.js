@@ -59,31 +59,13 @@
             _viewJSON: function (info, stripSlashes) {
                 if(typeof info.selectionText === "undefined") return;
                 var str = info.selectionText;
-                if(!str || str.length == 0) return;
+                if(!str || str.length === 0) return;
                 try {
                     if(stripSlashes) {
                         str = str.replace(/\\(.)/mg, "$1");
                     }
                     if( typeof JSON.parse(str) === "undefined" ) return;
-                    var viewTabUrl = chrome.extension.getURL('json.html');
-                    chrome.tabs.query({url: viewTabUrl, currentWindow: true}, function (tabs) {
-                        var tabLenght = tabs.length;
-                        if (tabLenght > 0) {
-                            var tabIdToSend = null;
-                            for(var j=0; j<tabLenght; j++){
-                                if(tabs[j].active){
-                                    tabIdToSend = tabs[j].id;
-                                    break;
-                                }
-                            }
-                            tabIdToSend = tabIdToSend !== null ? tabIdToSend : tabs[0].id;
-                            chrome.tabs.update(tabIdToSend, {'active': true}, function (tab) {
-                                chrome.tabs.sendMessage(tab.id, {json: str});
-                            });
-                        } else {
-                            openJsonTab(viewTabUrl, str);
-                        }
-                    });
+                    openJsonTab(str);
                 } catch (e) {}
             },
             viewJSON: function (info) {
@@ -219,6 +201,7 @@
         t_key: getSpanClass('key'),
         t_string: getSpanClass('s'),
         t_number: getSpanClass('n'),
+        t_nested: getSpanClass('nested'),
 
         t_null: getSpanBoth('null', 'nl'),
         t_true: getSpanBoth('true', 'bl'),
@@ -238,7 +221,7 @@
     };
 
     // Core recursive DOM-building function
-    function getdObjDOM(value, keyName, startCollapsed) {
+    function getdObjDOM(value, keyName, startCollapsed, isRoot) {
         var type,
             dObj,
             nonZeroSize,
@@ -309,7 +292,7 @@
                     escapedString = JSON.stringify(value)
                     ;
                 escapedString = escapedString.substring(1, escapedString.length - 1); // remove quotes
-                if (value[0] === 'h' && value.substring(0, 4) === 'http') { // crude but fast - some false positives, but rare, and UX doesn't suffer terribly from them.
+                if (value.charAt(0) === 'h' && value.substring(0, 4) === 'http') { // crude but fast - some false positives, but rare, and UX doesn't suffer terribly from them.
                     var innerStringA = document.createElement('A');
                     innerStringA.href = value;
                     innerStringA.innerText = escapedString;
@@ -322,6 +305,14 @@
                 valueElement.appendChild(templates.t_dblqText.cloneNode(false));
                 valueElement.appendChild(innerStringEl);
                 valueElement.appendChild(templates.t_dblqText.cloneNode(false));
+
+                // check if is nested json
+                try {
+                    if( (value.charAt(0) === '{' || value.charAt(0) === '[') && typeof JSON.parse(escapedString.replace(/\\(.)/mg, "$1")) !== "undefined" ) {
+                        valueElement.appendChild(templates.t_nested.cloneNode(false));
+                    }
+                } catch (e){}
+
                 dObj.appendChild(valueElement);
                 break;
 
@@ -346,7 +337,7 @@
                     for (k in value) {
                         if (value.hasOwnProperty(k)) {
                             count++;
-                            childdObj = getdObjDOM(value[k], k, startCollapsed);
+                            childdObj = getdObjDOM(value[k], k, startCollapsed, false);
                             // Add comma
                             comma = templates.t_commaText.cloneNode(false);
                             childdObj.appendChild(comma);
@@ -378,7 +369,7 @@
                     for (var i = 0, lastIndex = dObjChildLength - 1; i < dObjChildLength;
                          i++) {
                         // Make a new dObj, with no key
-                        childdObj = getdObjDOM(value[i], false, startCollapsed);
+                        childdObj = getdObjDOM(value[i], false, startCollapsed, false);
                         // Add comma if not last one
                         if (i < lastIndex) {
                             childdObj.appendChild(templates.t_commaText.cloneNode(false));
@@ -407,7 +398,7 @@
         }
 
         if (dObjChildLength > 0) {
-            if(typeof startCollapsed !== "undefined" && startCollapsed != null) {
+            if(typeof startCollapsed !== "undefined" && startCollapsed != null && !isRoot) {
                 dObj.classList.add('collapsed');
             }
             dObj.classList.add('numChild' + dObjChildLength);
@@ -424,7 +415,7 @@
         numChildClasses = {};
 
         // Format object (using recursive dObj builder)
-        var rootDObj = getdObjDOM(obj, false, startCollapsed);
+        var rootDObj = getdObjDOM(obj, false, startCollapsed, true);
 
         // The whole DOM is now built.
 
@@ -521,10 +512,11 @@
         fns[info.menuItemId](info);
     });
 
-    function openJsonTab(tabUrl, json) {
+    function openJsonTab(json) {
+        var viewTabUrl = chrome.extension.getURL('json.html');
         chrome.tabs.query({active: true}, function (tabs) {
             var index = tabs[0].index;
-            chrome.tabs.create({url: tabUrl, active: true, index: index + 1}, function (tab) {
+            chrome.tabs.create({url: viewTabUrl, active: true, index: index + 1}, function (tab) {
                 chrome.tabs.executeScript(tab.id, {file: "js/content.js", runAt: "document_start"}, function () {
                     chrome.tabs.sendMessage(tab.id, {json: json});
                 });
@@ -546,7 +538,7 @@
                 ;
 
             if (msg.type === 'OPEN JSON TAB') {
-                openJsonTab(msg.viewTabUrl, msg.json);
+                openJsonTab(msg.json);
             }
 
             else if (msg.type === 'OPEN OPTION TAB') {
@@ -562,6 +554,16 @@
                         });
                     }
                 });
+            }
+
+            else if (msg.type === 'VIEW NESTED') {
+                var prop = msg.path.substring(1);
+                if(msg.path.charAt(1) === "."){
+                    prop = prop.substring(1);
+                }
+                var result = Object.byString(msg.obj, prop);
+                result = result.replace(/\\(.)/mg, "$1");
+                openJsonTab(result);
             }
 
             else if (msg.type === 'SENDING TEXT') {
@@ -653,13 +655,14 @@
 
             else if (msg.type === 'COPY PATH') {
                 path = msg.path;
+                obj = msg.obj;
             }
         });
     });
 
     // on app update show change log
     chrome.runtime.onInstalled.addListener(function(details) {
-        if(details.reason == "update") {
+        if(details.reason === "update") {
             chrome.tabs.create({url: chrome.extension.getURL('changelog.html'), active: true});
         }
     });

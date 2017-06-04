@@ -37,8 +37,7 @@
 
     document.getElementById("callBeautify").addEventListener("click", beautifyJSON);
     document.getElementById("callMinify").addEventListener("click", minifyJSON);
-    document.getElementById("callView").addEventListener("click", function(){ tabView(false) });
-    document.getElementById("callViewNewTab").addEventListener("click", function(){ tabView(true) });
+    document.getElementById("callView").addEventListener("click", tabView);
 
     function beautifyJSON() {
         var dumpTextArea = document.getElementById('dumpTextArea');
@@ -84,31 +83,13 @@
         cln.remove();
     }
 
-    function tabView(newTab) {
+    function tabView() {
         var jsonInput = document.getElementById('dumpTextArea').value;
         if (jsonInput.length > 0) {
             try {
                 JSON.parse(jsonInput);
-                var viewTabUrl = chrome.extension.getURL('json.html');
-                chrome.tabs.query({url: viewTabUrl, currentWindow: true}, function (tabs) {
-                    var tabLenght = tabs.length;
-                    if (tabLenght > 0 && !newTab) {
-                        var tabIdToSend = null;
-                        for(var j=0; j<tabLenght; j++){
-                            if(tabs[j].active){
-                                tabIdToSend = tabs[j].id;
-                                break;
-                            }
-                        }
-                        tabIdToSend = tabIdToSend !== null ? tabIdToSend : tabs[0].id;
-                        chrome.tabs.update(tabIdToSend, {'active': true}, function (tab) {
-                            chrome.tabs.sendMessage(tab.id, {json: jsonInput});
-                        });
-                    } else {
-                        var port = chrome.extension.connect({name: 'djson'});
-                        port.postMessage({type: "OPEN JSON TAB", viewTabUrl: viewTabUrl, json: jsonInput});
-                    }
-                });
+                var port = chrome.extension.connect({name: 'djson'});
+                port.postMessage({type: "OPEN JSON TAB", json: jsonInput});
             } catch (exc) {
                 document.getElementById('infoArea').innerHTML = exc + '';
             }

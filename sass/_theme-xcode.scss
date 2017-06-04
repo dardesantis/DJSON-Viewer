@@ -36,6 +36,10 @@ body[data-theme="xcode"], #themeChooserPreview[data-theme="xcode"] {
   .bl, .nl, .n {
     color: $xcode-color-null;
   }
+  .nested:after {
+    background-color: $xcode-color-null;
+    color: $xcode-color-background;
+  }
 
   #formattingMsg {
     color: $xcode-color-text-dark;

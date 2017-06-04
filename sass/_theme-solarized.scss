@@ -36,6 +36,10 @@ body[data-theme="solarized"], #themeChooserPreview[data-theme="solarized"] {
   .bl, .nl, .n {
     color: $solarized-color-null;
   }
+  .nested:after {
+    background-color: $solarized-color-null;
+    color: $solarized-color-background;
+  }
 
   #formattingMsg {
     color: $solarized-color-text-dark;
