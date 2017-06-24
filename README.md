@@ -22,7 +22,7 @@ Features
 * You can inspect the JSON by typing `djson` in the console
 * Counts items and properties in a collection
 * Show JSON path of the elements on hover and copy it with the context menu
-* Option to start with JSON collapsed
+* Option to start with JSON collapsed (always or if the file is big)
 * Recognize nested JSON strings in properties value
 
 A background worker is used to prevent the UI freezing when processing very long JSON pages.

@@ -67,6 +67,9 @@
     // start JSON collapsed
     optionInit("startCollapsedCheckbox");
 
+    // start JSON collapsed if big json
+    optionInit("startCollapsedIfBigCheckbox");
+
     // show always count of children
     optionInit("showAlwaysCountCheckbox");
 

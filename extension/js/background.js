@@ -562,7 +562,6 @@
                     prop = prop.substring(1);
                 }
                 var result = Object.byString(msg.obj, prop);
-                result = result.replace(/\\(.)/mg, "$1");
                 openJsonTab(result);
             }
 
@@ -647,6 +646,7 @@
                 port.postMessage(['FORMATTING', JSON.stringify(localStorage)]);
 
                 // Do formatting
+                var startCollapsed = localStorage.getItem('startCollapsed') || (localStorage.getItem('startCollapsedIfBig') && text.length > 1000000)
                 var html = jsonObjToHTML(obj, jsonpFunctionName, localStorage.getItem('startCollapsed'));
 
                 // Post the HTML string to the content script

@@ -121,7 +121,10 @@
                         buttonCollapse.addEventListener(
                             'click',
                             function () {
-                                collapse([document.getElementsByClassName('expander')[0].parentNode], true);
+                                var firstBlockInner = document.querySelector(".rootDObj > .blockInner");
+                                if (firstBlockInner !== null) {
+                                    collapse(firstBlockInner.children, true);
+                                }
                             }
                         );
 
