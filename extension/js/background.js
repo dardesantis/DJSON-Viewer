@@ -655,7 +655,6 @@
 
             else if (msg.type === 'COPY PATH') {
                 path = msg.path;
-                obj = msg.obj;
             }
         });
     });
