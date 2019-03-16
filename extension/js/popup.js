@@ -38,6 +38,7 @@
     document.getElementById("callBeautify").addEventListener("click", beautifyJSON);
     document.getElementById("callMinify").addEventListener("click", minifyJSON);
     document.getElementById("callView").addEventListener("click", tabView);
+    document.getElementById("callMd5").addEventListener("click", md5String);
 
     function beautifyJSON() {
         var dumpTextArea = document.getElementById('dumpTextArea');
@@ -95,6 +96,22 @@
             }
         } else {
             document.getElementById('infoArea').innerHTML = 'write a Json in the textarea';
+        }
+    }
+
+    function md5String() {
+        var jsonInput = document.getElementById('dumpTextArea').value;
+        var infoArea = document.getElementById('infoArea');
+        if (jsonInput.length > 0) {
+            try {
+                var port = chrome.extension.connect({name: 'djson'});
+                port.postMessage({type: "MD5 STRING", string: jsonInput});
+                infoArea.innerHTML = "MD5 copied in your clipboard";
+            } catch (exc) {
+                infoArea.innerHTML = exc + '';
+            }
+        }  else {
+            infoArea.innerHTML = 'write a string in the textarea';
         }
     }
 })();

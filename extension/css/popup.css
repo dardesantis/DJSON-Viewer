@@ -74,6 +74,42 @@
     background-color: #55ace3;
 }
 
+.yellowButton {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fdff84), color-stop(1, #adb946));
+    background: -moz-linear-gradient(top, #fdff84 5%, #adb946 100%);
+    background: -webkit-linear-gradient(top, #fdff84 5%, #adb946 100%);
+    background: -o-linear-gradient(top, #fdff84 5%, #adb946 100%);
+    background: -ms-linear-gradient(top, #fdff84 5%, #adb946 100%);
+    background: linear-gradient(to bottom, #fdff84 5%, #adb946 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdff84', endColorstr='#adb946', GradientType=0);
+    background-color: #adb946;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 6px;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial, serif;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 4px 108px;
+    text-decoration: none;
+    margin-left: 5px;
+    margin-top: 7px;
+    border: 1px solid #ABABAB;
+}
+
+.yellowButton:hover {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #adb946), color-stop(1, #fdff84));
+    background: -moz-linear-gradient(top, #adb946 5%, #fdff84 100%);
+    background: -webkit-linear-gradient(top, #adb946 5%, #fdff84 100%);
+    background: -o-linear-gradient(top, #adb946 5%, #fdff84 100%);
+    background: -ms-linear-gradient(top, #adb946 5%, #fdff84 100%);
+    background: linear-gradient(to bottom, #adb946 100%, #fdff84 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#adb946', endColorstr='#fdff84', GradientType=0);
+    background-color: #adb946;
+}
+
 .myButton:active {
     position: relative;
     top: 1px;
