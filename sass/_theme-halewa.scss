@@ -9,8 +9,16 @@ $halewa-color-null: #6dc2b8;
 body[data-theme="halewa"], #themeChooserPreview[data-theme="halewa"] {
   background-color: $halewa-color-background;
   .expander {
-    border-top: 8px solid $halewa-color-text;
+    color: $halewa-color-text;
   }
+  #gutter {
+    background: $halewa-color-text;
+    opacity: 0.05;
+  }
+  [line-number]:before {
+    color: $halewa-color-text;
+  }
+
   /* SYNTAX HIGHLIGHTING */
   #formattedJson, #jsonpOpener, #jsonpCloser {
     color: $halewa-color-text-dark;

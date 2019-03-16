@@ -29,6 +29,7 @@
     var obj,
         path,
         numChildClasses,
+        lineNumber,
         fns = {
             copyPath: function () {
                 copy(path)
@@ -230,7 +231,7 @@
     };
 
     // Core recursive DOM-building function
-    function getdObjDOM(value, keyName, startCollapsed, isRoot) {
+    function getdObjDOM(value, keyName, startCollapsed, isRoot, hideLineNumber) {
         var type,
             dObj,
             nonZeroSize,
@@ -258,6 +259,9 @@
 
         // Root node for this dObj
         dObj = templates.t_dObj.cloneNode(false);
+        if (!hideLineNumber) {
+            dObj.setAttribute('line-number', lineNumber++);
+        }
 
         // Add an 'expander' first (if this is object/array with non-zero size)
         if (type === TYPE_OBJECT || type === TYPE_ARRAY) {
@@ -346,7 +350,7 @@
                     for (k in value) {
                         if (value.hasOwnProperty(k)) {
                             count++;
-                            childdObj = getdObjDOM(value[k], k, startCollapsed, false);
+                            childdObj = getdObjDOM(value[k], k, startCollapsed, false, hideLineNumber);
                             // Add comma
                             comma = templates.t_commaText.cloneNode(false);
                             childdObj.appendChild(comma);
@@ -361,7 +365,11 @@
                 }
 
                 // Add closing brace
-                dObj.appendChild(templates.t_cBrace.cloneNode(true));
+                var closingBrace = templates.t_cBrace.cloneNode(true);
+                if (nonZeroSize) {
+                    closingBrace.setAttribute('line-number', lineNumber++);
+                }
+                dObj.appendChild(closingBrace);
                 break;
 
             case TYPE_ARRAY:
@@ -378,7 +386,7 @@
                     for (var i = 0, lastIndex = dObjChildLength - 1; i < dObjChildLength;
                          i++) {
                         // Make a new dObj, with no key
-                        childdObj = getdObjDOM(value[i], false, startCollapsed, false);
+                        childdObj = getdObjDOM(value[i], false, startCollapsed, false, hideLineNumber);
                         // Add comma if not last one
                         if (i < lastIndex) {
                             childdObj.appendChild(templates.t_commaText.cloneNode(false));
@@ -390,7 +398,11 @@
                     dObj.appendChild(blockInner);
                 }
                 // Add closing bracket
-                dObj.appendChild(templates.t_cBracket.cloneNode(true));
+                var closingBrace = templates.t_cBrace.cloneNode(true);
+                if (nonZeroSize) {
+                    closingBrace.setAttribute('line-number', lineNumber++);
+                }
+                dObj.appendChild(closingBrace);
                 break;
 
             case TYPE_BOOL:
@@ -418,37 +430,45 @@
     }
 
     // Function to convert object to an HTML string
-    function jsonObjToHTML(obj, jsonpFunctionName, startCollapsed) {
+    function jsonObjToHTML(obj, jsonpFunctionName, startCollapsed, hideLineNumber) {
+
+        lineNumber = jsonpFunctionName === null ? 1 : 2;
 
         // reset number of children
         numChildClasses = {};
 
         // Format object (using recursive dObj builder)
-        var rootDObj = getdObjDOM(obj, false, startCollapsed, true);
+        var rootDObj = getdObjDOM(obj, false, startCollapsed, true, hideLineNumber);
 
         // The whole DOM is now built.
 
         // Set class on root node to identify it
         rootDObj.classList.add('rootDObj');
 
+        // create gutter for lineNumbers
+        var gutterWidth = 1 + (lineNumber.toString().length * 0.5) + 'rem';
+        var gutter = document.createElement('div');
+        gutter.id = 'gutter';
+        gutter.style.width = gutterWidth;
+
         // Make div#formattedJson and append the root dObj
         var divFormattedJson = document.createElement('DIV');
         divFormattedJson.id = 'formattedJson';
+        if (!hideLineNumber) {
+            divFormattedJson.style.marginLeft = gutterWidth;
+        }
         divFormattedJson.appendChild(rootDObj);
-
-        // Convert it to an HTML string (shame about this step, but necessary for passing it through to the content page)
-        var returnHTML = divFormattedJson.outerHTML;
 
         // Top and tail with JSONP padding if necessary
         if (jsonpFunctionName !== null) {
-            returnHTML =
-                '<div id="jsonpOpener">' + jsonpFunctionName + ' ( </div>' +
-                returnHTML +
-                '<div id="jsonpCloser">)</div>';
+            divFormattedJson.innerHTML =
+                '<div id="jsonpOpener" ' + (!hideLineNumber ? ' line-number="1"' : '') +'>' + jsonpFunctionName + ' ( </div>' +
+                divFormattedJson.innerHTML +
+                '<div id="jsonpCloser" ' + (!hideLineNumber ? ' line-number="' + lineNumber + '"' : '') +'>)</div>';
         }
 
         // Return the HTML
-        return returnHTML;
+        return (!hideLineNumber ? gutter.outerHTML : '') + divFormattedJson.outerHTML;
     }
 
     function copy(value) {
@@ -660,8 +680,8 @@
                 port.postMessage(['FORMATTING', JSON.stringify(localStorage)]);
 
                 // Do formatting
-                var startCollapsed = localStorage.getItem('startCollapsed') || (localStorage.getItem('startCollapsedIfBig') && text.length > 1000000)
-                var html = jsonObjToHTML(obj, jsonpFunctionName, localStorage.getItem('startCollapsed'));
+                var startCollapsed = localStorage.getItem('startCollapsed') || (localStorage.getItem('startCollapsedIfBig') && text.length > 1000000);
+                var html = jsonObjToHTML(obj, jsonpFunctionName, localStorage.getItem('startCollapsed'), localStorage.getItem('hideLineNumbers'));
 
                 // Post the HTML string to the content script
                 port.postMessage(['FORMATTED', html, validJsonText, JSON.stringify(localStorage), JSON.stringify(Object.keys(numChildClasses))]);

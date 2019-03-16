@@ -17,6 +17,7 @@ Features
 * Recursive collapsible elements
 * Clickable URLs
 * Toggle between raw and parsed JSON
+* Line numbers
 * Works on any valid JSON page – URL doesn't matter
 * Works on local files too (if you enable this in `chrome://extensions`)
 * You can inspect the JSON by typing `djson` in the console

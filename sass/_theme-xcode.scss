@@ -9,7 +9,14 @@ $xcode-color-null: #3b8afb;
 body[data-theme="xcode"], #themeChooserPreview[data-theme="xcode"] {
   background-color: $xcode-color-background;
   .expander {
-    border-top: 8px solid $xcode-color-text;
+    color: $xcode-color-text;
+  }
+  #gutter {
+    background: $xcode-color-text;
+    opacity: 0.15;
+  }
+  [line-number]:before {
+    color: $xcode-color-text;
   }
   /* SYNTAX HIGHLIGHTING */
   #formattedJson, #jsonpOpener, #jsonpCloser {

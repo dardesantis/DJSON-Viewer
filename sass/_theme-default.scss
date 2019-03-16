@@ -9,7 +9,14 @@ $default-color-null: #1A01CC;
 body[data-theme="default"], #themeChooserPreview[data-theme="default"] {
   background-color: $default-color-background;
   .expander {
-    border-top: 8px solid $default-color-text;
+    color: $default-color-text;
+  }
+  #gutter {
+    background: $default-color-text;
+    opacity: 0.15;
+  }
+  [line-number]:before {
+    color: $default-color-text;
   }
   /* SYNTAX HIGHLIGHTING */
   #formattedJson, #jsonpOpener, #jsonpCloser {

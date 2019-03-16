@@ -9,7 +9,14 @@ $darkorange-color-null: lightblue;
 body[data-theme="darkorange"], #themeChooserPreview[data-theme="darkorange"] {
   background-color: $darkorange-color-background;
   .expander {
-    border-top: 8px solid $darkorange-color-text;
+   color: $darkorange-color-text;
+  }
+  #gutter {
+    background: $darkorange-color-text;
+    opacity: 0.15;
+  }
+  [line-number]:before {
+    color: $darkorange-color-text;
   }
   /* SYNTAX HIGHLIGHTING */
   #formattedJson, #jsonpOpener, #jsonpCloser {

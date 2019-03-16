@@ -35,7 +35,7 @@
         var option = document.createElement('option');
         option.value = themeName;
         option.innerText = themeName;
-        if(theme && theme == themeName){
+        if(theme && theme === themeName){
             option.selected = 'selected';
             document.getElementById("themeChooserPreview").setAttribute('data-theme', themeName);
         }
@@ -72,5 +72,8 @@
 
     // show always count of children
     optionInit("showAlwaysCountCheckbox");
+
+    // hide line numbers
+    optionInit("hideLineNumbersCheckbox");
 
 })();
