@@ -398,11 +398,11 @@
                     dObj.appendChild(blockInner);
                 }
                 // Add closing bracket
-                var closingBrace = templates.t_cBrace.cloneNode(true);
+                var closingBracket = templates.t_cBracket.cloneNode(true);
                 if (nonZeroSize) {
-                    closingBrace.setAttribute('line-number', lineNumber++);
+                    closingBracket.setAttribute('line-number', lineNumber++);
                 }
-                dObj.appendChild(closingBrace);
+                dObj.appendChild(closingBracket);
                 break;
 
             case TYPE_BOOL:
