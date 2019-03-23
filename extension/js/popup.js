@@ -35,46 +35,6 @@
         }
     };
 
-    document.getElementById("callBeautify").addEventListener("click", beautifyJSON);
-    document.getElementById("callMinify").addEventListener("click", minifyJSON);
-    document.getElementById("callView").addEventListener("click", tabView);
-    document.getElementById("callMd5").addEventListener("click", md5String);
-
-    function beautifyJSON() {
-        var dumpTextArea = document.getElementById('dumpTextArea');
-        var infoArea = document.getElementById('infoArea');
-        try {
-            var ugly = dumpTextArea.value;
-            if (ugly.length > 0) {
-                var obj = JSON.parse(ugly);
-                dumpTextArea.value = JSON.stringify(obj, undefined, 4);
-                copyMe(dumpTextArea);
-                infoArea.innerHTML = "JSON Beautified and copied in your clipboard";
-            } else {
-                infoArea.innerHTML = 'write a Json in the textarea';
-            }
-        } catch (exc) {
-            infoArea.innerHTML = exc + '';
-        }
-    }
-
-    function minifyJSON() {
-        var dumpTextArea = document.getElementById('dumpTextArea');
-        var infoArea = document.getElementById('infoArea');
-        try {
-            var formatted = dumpTextArea.value;
-            if (formatted.length > 0) {
-                dumpTextArea.value = JSON.stringify(JSON.parse(formatted));
-                copyMe(dumpTextArea);
-                infoArea.innerHTML = "JSON Minified and copied in your clipboard";
-            } else {
-                infoArea.innerHTML = 'write a Json in the textarea';
-            }
-        } catch (exc) {
-            infoArea.innerHTML = exc + '';
-        }
-    }
-
     function copyMe(textArea) {
         var cln = textArea.cloneNode(true);
         cln.style.height = 0;
@@ -84,34 +44,115 @@
         cln.remove();
     }
 
-    function tabView() {
-        var jsonInput = document.getElementById('dumpTextArea').value;
-        if (jsonInput.length > 0) {
-            try {
-                JSON.parse(jsonInput);
-                var port = chrome.extension.connect({name: 'djson'});
-                port.postMessage({type: "OPEN JSON TAB", json: jsonInput});
-            } catch (exc) {
-                document.getElementById('infoArea').innerHTML = exc + '';
-            }
-        } else {
-            document.getElementById('infoArea').innerHTML = 'write a Json in the textarea';
-        }
-    }
+    $(document).ready(function() {
+        /*
+         * Events registration
+         */
+        $("#input").keyup(function () {
+            hasher.update();
+        });
+        $("#input").change(function () {
+            hasher.update();
+        });
 
-    function md5String() {
-        var jsonInput = document.getElementById('dumpTextArea').value;
-        var infoArea = document.getElementById('infoArea');
-        if (jsonInput.length > 0) {
+        // Open separate window (pop-out)
+        $("#button-popout").click(function () {
+            if (typeof chrome.extension !== "undefined") {
+                chrome.tabs.create({
+                    url: 'popup.html'
+                });
+            }
+        });
+
+        // Click on tab
+        $("#tabs li").click(function () {
+            // highlight active tab, remove highlight on everything else
+            $("#tabs li").removeClass("on");
+            $(this).addClass("on");
+            hasher.tab = tabs[this.id];
+            hasher.init();
+            hasher.update();
+            $("#input-value").focus();
+        });
+
+        $("#callBeautify").click(function () {
+            var dumpTextArea = document.getElementById('input-value');
+            var infoArea = document.getElementById('infoArea');
             try {
-                var port = chrome.extension.connect({name: 'djson'});
-                port.postMessage({type: "MD5 STRING", string: jsonInput});
-                infoArea.innerHTML = "MD5 copied in your clipboard";
+                var ugly = dumpTextArea.value;
+                if (ugly.length > 0) {
+                    var obj = JSON.parse(ugly);
+                    dumpTextArea.value = JSON.stringify(obj, undefined, 4);
+                    copyMe(dumpTextArea);
+                    infoArea.innerHTML = "JSON Beautified and copied in your clipboard";
+                } else {
+                    infoArea.innerHTML = 'write a Json in the textarea';
+                }
             } catch (exc) {
                 infoArea.innerHTML = exc + '';
             }
-        }  else {
-            infoArea.innerHTML = 'write a string in the textarea';
-        }
-    }
+        });
+
+        $("#callMinify").click(function () {
+            var dumpTextArea = document.getElementById('input-value');
+            var infoArea = document.getElementById('infoArea');
+            try {
+                var formatted = dumpTextArea.value;
+                if (formatted.length > 0) {
+                    dumpTextArea.value = JSON.stringify(JSON.parse(formatted));
+                    copyMe(dumpTextArea);
+                    infoArea.innerHTML = "JSON Minified and copied in your clipboard";
+                } else {
+                    infoArea.innerHTML = 'write a Json in the textarea';
+                }
+            } catch (exc) {
+                infoArea.innerHTML = exc + '';
+            }
+        });
+
+        $("#callView").click(function () {
+            var jsonInput = document.getElementById('input-value').value;
+            if (jsonInput.length > 0) {
+                try {
+                    JSON.parse(jsonInput);
+                    var port = chrome.extension.connect({name: 'djson'});
+                    port.postMessage({type: "OPEN JSON TAB", json: jsonInput});
+                } catch (exc) {
+                    document.getElementById('infoArea').innerHTML = exc + '';
+                }
+            } else {
+                document.getElementById('infoArea').innerHTML = 'write a Json in the textarea';
+            }
+        });
+
+        /*
+         * Animations
+         */
+        $(".buttons-2").mouseenter(function(){
+            $(this).animate(
+                {
+                    opacity: 0.8
+                },
+                150
+            );
+        }).mouseleave(function(){
+            $(this).animate(
+                {
+                    opacity: 0.4
+                },
+                300
+            );
+        });
+
+        /*
+         * Init
+         */
+        hasher.init();
+        hasher.update();
+
+        // Focus hack, see http://stackoverflow.com/a/11400653/1295557
+        if (location.search !== "?focusHack") location.search = "?focusHack";
+        //$("#input-value").focus();
+        window.scrollTo(0, 0);
+    });
 })();

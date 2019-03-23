@@ -194,12 +194,12 @@ pre {
 
 .expander {
   float: left;
-  margin-left: -1.2rem;
+  margin-left: -1rem;
   margin-right: 0;
   z-index: 5;
   opacity: 0.15;
   cursor: pointer;
-  font-size: 28px;
+  font-size: 20px;
   -webkit-transition: -webkit-transform 0.1s linear;
 
   &:before {

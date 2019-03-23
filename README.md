@@ -4,7 +4,8 @@ DJSON Viewer and Formatter
 ==============
 
 Chrome extension for printing and formatting JSON and JSONP nicely directly in a browser tab.
-Initial base of the formatter from: [callumlocke json-formatter](https://github.com/callumlocke/json-formatter)
+Initial base of the formatter from: [callumlocke json-formatter](https://github.com/callumlocke/json-formatter).
+Using developer utils from: [hasher](https://github.com/s12v/hasher)
 
 Features
 --------
@@ -25,7 +26,7 @@ Features
 * Show JSON path of the elements on hover and copy it with the context menu
 * Option to start with JSON collapsed (always or if the file is big)
 * Recognize nested JSON strings in properties value
-* MD5 strings from input popup or context menu
+* Hashes, Encode, Time Strings, Numbers utils
 
 A background worker is used to prevent the UI freezing when processing very long JSON pages.
 
